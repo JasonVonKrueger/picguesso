@@ -1,0 +1,24 @@
+{
+  "name": "picguesso",
+  "version": "1.0.0",
+  "description": "Draw and they will come.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JasonVonKrueger/picguesso.git"
+  },
+  "author": "@nervoussow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JasonVonKrueger/picguesso/issues"
+  },
+  "homepage": "https://github.com/JasonVonKrueger/picguesso#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "papercss": "^1.8.3",
+    "socket.io": "^4.5.3"
+  }
+}
