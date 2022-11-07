@@ -1,22 +1,10 @@
-/* * {
+* {
     box-sizing: border-box;
 }
 
 body {
-    color: #2F4F4F;
-    background-color: #F6F9ED;
-    font-size: 1.5em;
-    margin: 0px;
-    min-width: 1000px;
-    font-family: Helvetica;
-} */
-
-/* .row {
-    height: 525px;
-    width: 100%; 
-    position: relative;
-    text-align: center;
-} */
+    background-color: #F2F3F4;
+}
 
 #guess, .draw {
     border: 1px solid #76EEC6;
@@ -76,12 +64,12 @@ ul>li {
     height: 28px;
 }
 
-h1 {
+/* h1 {
     xbackground-color: #66CDAA;
     margin:  0 0 1px 0;
     padding: 10px 40px;
     text-align: center;
-}
+} */
 
 #guess, .draw {
     background-color: white;
@@ -159,7 +147,7 @@ canvas {
     background-color: white;
 }
 
-.grey-out {
+/* .grey-out {
     position: fixed;
     top: 0px;
     left: 0px;
@@ -180,17 +168,12 @@ canvas {
     padding: 25px 5px;
     top: 20%;
     margin: auto;
-}
+} */
 
-#username {
+/* #username {
     width: 90%;
     font-size: 30px;
     padding: 5px;
     margin: 10px;
-}
+} */
 
-#submitname {
-    xwidth: 70px;
-    xheight: 30px;
-    xbackground-color: #9BCD9B;
-}

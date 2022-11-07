@@ -1,85 +1,90 @@
-<!doctype html>
-<title>Picguesso</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Picguesso</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-<link rel="stylesheet" href="styles/paper.min.css">
-<link rel="stylesheet" href="styles/main.css">
+        <link rel="icon" href="images/favicon.ico">
+        <link rel="stylesheet" href="styles/paper.min.css">
+        <link rel="stylesheet" href="styles/main.css">
+    </head>
 
-<script src="//code.jquery.com/jquery-2.1.0.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script src="js/main.js"></script>
-
-
-<!-- <div class="grey-out hidden modal">
-    <label class="modal-bg" for="modal-1"></label>
-    <div class="modal-body">
-        <label class="btn-close" for="modal-1">X</label>
-        <h4 class="modal-title">Modal Title</h4>
-        <h5 class="modal-subtitle">Modal Subtitle</h5>
-        <p class="modal-text"><input id="username" type="text" placeholder="Pablo" maxlength="14" autofocus></p>
-        <label for="modal-1">Submit</label>
-    </div>
-</div> -->
-
-<div class="grey-out hidden">
-    <form class="user">
-        <div>Welcome to Picguesso!</div>
-        <div class="form-group">
-            <input id="username" type="text" placeholder="Enter a nickname" maxlength="14" autofocus>
-            <button type="submit" id="submitname">Submit</button>
-        </div>
-    </form>
-</div>
-
-<!-- <nav class="border fixed split-nav">
-    <div class="nav-brand">
-      <h3><a href="#">Picguesso</a></h3>
-    </div>
-    <div class="collapsible">
-      <input id="collapsible1" type="checkbox" name="collapsible1">
-      <label for="collapsible1">
-        <div class="bar1"></div>
-        <div class="bar2"></div>
-        <div class="bar3"></div>
-      </label>
-      <div class="collapsible-body">
-        <ul class="inline">
-          <li><a href="#">Documentation</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Github</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav> -->
-
-
-<div id="main" class="container-lg">
-    <h1>Picguesso</h1>
-    <div class="row">
-        <canvas id="canvas" class="border border-primary"></canvas>
-        <div class="users border border-primary">
-            <ul></ul>
-            <div id="guesses"></div>
-            <div class="draw-buttons">
-                <button value="0" class="clear" type="button">X</button>
-                <button value="#000000" class="black" type="button"></button>
-                <button value="#0000EE" class="blue" type="button"></button>
-                <button value="#66CD00" class="green" type="button"></button>
-                <button value="#FF0000" class="red" type="button"></button>
-                <button value="#FFFF00" class="yellow" type="button"></button>
-                <button value="white" class="white" type="button"></button>
+    <body>
+        <nav class="border fixed split-nav">
+            <div class="nav-brand">
+                <span style="display: inline-block"><h3>Picguesso</h3></span>
+                <span style="display: inline-block"><img src="images/pencil.svg" width="40px" style="border: 0"/></span>
+            </div>
+        </nav>
+        
+        <div id="main" class="container-lg" style="margin-top: 8%;">
+            <div class="row">
+                <canvas id="canvas" class="border border-primary"></canvas>
+                <div class="users border border-primary">
+                    <ul></ul>
+                    <div id="guesses"></div>
+                    <div class="draw-buttons">
+                        <button value="0" class="clear" type="button">X</button>
+                        <button value="#000000" class="black" type="button"></button>
+                        <button value="#0000EE" class="blue" type="button"></button>
+                        <button value="#66CD00" class="green" type="button"></button>
+                        <button value="#FF0000" class="red" type="button"></button>
+                        <button value="#FFFF00" class="yellow" type="button"></button>
+                        <button value="white" class="white" type="button"></button>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="top-message">
+                <div class="draw hidden">
+                    <p>The secret word is: <span class="word"></span></p>
+                </div>
+                <form id="guess" class="hidden">
+                    Guess the word! <input name="guess" class="guess-input" type="text">
+                </form>
             </div>
         </div>
-    </div>
 
-    <div id="top-message">
-        <div class="draw hidden">
-            <p>The secret word is: <span class="word"></span></p>
+        <!-- hidden modal trigger -->
+        <div class="row flex-spaces child-borders hidden">
+            <label class="margin" for="modal_nick">Another Modal!</label>
         </div>
-        <form id="guess" class="hidden">
-            Guess the word! <input name="guess" class="guess-input" type="text">
-        </form>
-    </div>
-</div>
+        <input class="modal-state" id="modal_nick" type="checkbox">
+
+        <!-- modals -->
+        <div class="modal">
+            <form class="user">
+            <label class="modal-bg" for="modal-2"></label>
+            <div class="modal-body border border-primary" style="width: 30%;">
+                <label class="btn-close" for="modal-2">X</label>
+                <h4 class="modal-title">Welcome to Picguesso!!</h4>
+                <p class="modal-text">
+                    <div class="row">
+                        
+                        <div class="col sm-8">
+                            <div class="form-group">
+                                <input id="username" class="input-block" type="text" placeholder="Enter a nickname" maxlength="14" autofocus>
+                            </div>
+                        </div>
+                        <div class="col sm-4">
+                            <div class="form-group">
+                                <button type="submit" class="input-block" id="submitname" style="padding: 8px;">Submit</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </p>
+            </div>
+            </form>
+        </div>
+
+        <script src="//code.jquery.com/jquery-2.1.0.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="js/main.js"></script>
+        
+    </body>
+</html>

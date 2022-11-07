@@ -1,10 +1,46 @@
 var socket = io();
-var user;
+let user;
+let context;
+let canvas;
+let click = false;
 
+$(document).ready(function() {
+    $('#modal_nick').click();
+
+    canvas = $('#canvas');
+    context = canvas[0].getContext('2d');
+    canvas[0].width = canvas[0].offsetWidth;
+    canvas[0].height = canvas[0].offsetHeight;
+
+    usernameAsk();
+
+    socket.on('userlist', userlist);
+    socket.on('guesser', guesser);
+    socket.on('guessword', guessword);
+    socket.on('draw', draw);
+    socket.on('draw word', drawWord);
+    socket.on('drawer', pictionary);
+    socket.on('new drawer', newDrawer);
+    socket.on('correct answer', correctAnswer);
+    socket.on('reset', reset);
+    socket.on('clear screen', clearScreen);
+
+});
+
+/* ************************************************************************************
+______                _   _                 ___                  _   _             
+|  ___|              | | (_)               |_  |                | | (_)            
+| |_ _   _ _ __   ___| |_ _  ___  _ __       | |_   _ _ __   ___| |_ _  ___  _ __  
+|  _| | | | '_ \ / __| __| |/ _ \| '_ \      | | | | | '_ \ / __| __| |/ _ \| '_ \ 
+| | | |_| | | | | (__| |_| | (_) | | | | /\__/ / |_| | | | | (__| |_| | (_) | | | |
+\_|  \__,_|_| |_|\___|\__|_|\___/|_| |_| \____/ \__,_|_| |_|\___|\__|_|\___/|_| |_|                                                                                  
+                                                                                   
+************************************************************************************ */
+
+// ****************************************************************
 function usernameAsk() {
-    $('.grey-out').fadeIn(500);
     $('.user').fadeIn(500);
-    $('.user').submit(function(){
+    $('.user').submit(function() {
         event.preventDefault();
         user = $('#username').val().trim();
 
@@ -25,10 +61,6 @@ function usernameAsk() {
         $('input.guess-input').focus();
     });
 };
-
-var context;
-var canvas;
-var click = false;
 
 var clearScreen = function() {
     context.clearRect(0, 0, canvas[0].width, canvas[0].height);
@@ -161,25 +193,3 @@ var pictionary = function() {
     });
 
 };
-
-$(document).ready(function() {
-
-    canvas = $('#canvas');
-    context = canvas[0].getContext('2d');
-    canvas[0].width = canvas[0].offsetWidth;
-    canvas[0].height = canvas[0].offsetHeight;
-
-    usernameAsk();
-
-    socket.on('userlist', userlist);
-    socket.on('guesser', guesser);
-    socket.on('guessword', guessword);
-    socket.on('draw', draw);
-    socket.on('draw word', drawWord);
-    socket.on('drawer', pictionary);
-    socket.on('new drawer', newDrawer);
-    socket.on('correct answer', correctAnswer);
-    socket.on('reset', reset);
-    socket.on('clear screen', clearScreen);
-
-});
