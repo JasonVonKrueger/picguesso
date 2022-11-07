@@ -21,7 +21,7 @@
         </nav>
         
         <div id="main" class="container-lg" style="margin-top: 8%;">
-            <div class="row">
+            <div class="row" style="justify-content: center;">
                 <canvas id="canvas" class="border border-primary"></canvas>
                 <div class="users border border-primary">
                     <ul></ul>
@@ -55,15 +55,14 @@
         <input class="modal-state" id="modal_nick" type="checkbox">
 
         <!-- modals -->
-        <div class="modal">
+        <div class="modal nickname">
             <form class="user">
             <label class="modal-bg" for="modal-2"></label>
             <div class="modal-body border border-primary" style="width: 30%;">
                 <label class="btn-close" for="modal-2">X</label>
-                <h4 class="modal-title">Welcome to Picguesso!!</h4>
+                <h4 class="modal-title">Let's play Picguesso!!</h4>
                 <p class="modal-text">
                     <div class="row">
-                        
                         <div class="col sm-8">
                             <div class="form-group">
                                 <input id="username" class="input-block" type="text" placeholder="Enter a nickname" maxlength="14" autofocus>
@@ -74,8 +73,9 @@
                                 <button type="submit" class="input-block" id="submitname" style="padding: 8px;">Submit</button>
                             </div>
                         </div>
-                        
                     </div>
+
+                    <div id="alert_nickname" class="alert alert-danger">Nickname already exists!!</div>
                 </p>
             </div>
             </form>

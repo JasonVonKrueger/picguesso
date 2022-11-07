@@ -1,4 +1,4 @@
-var socket = io();
+let socket = io();
 let user;
 let context;
 let canvas;
@@ -51,12 +51,12 @@ function usernameAsk() {
         var index = users.indexOf(user);
 
         if (index > -1) {
-            alert(user + ' already exists');
+            $('#alert_nickname').fadeIn(500);
             return false
         };
         
         socket.emit('join', user);
-        $('.grey-out').fadeOut(300);
+        $('.nickname').fadeOut(300);
         $('.user').fadeOut(300);
         $('input.guess-input').focus();
     });
