@@ -4,6 +4,7 @@ var socket_io = require('socket.io');
 const words = require('./lib/words')
 
 const app = express();
+app.use(express.static('public'));
 app.use('/picguesso', express.static('public'));
 
 var server = http.Server(app);
