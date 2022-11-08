@@ -179,6 +179,18 @@ let pictionary = function() {
         };
     });
 
+    canvas.on('touchstart', function(event) { 
+        drawing = true;   
+    });
+    
+    canvas.on('touchmove', function(event) { 
+        drawing = true;   
+    });    
+
+    canvas.on('touchend', function(event) { 
+        drawing = false;   
+    });  
+
     canvas.on('mousedown', function(event) { 
         drawing = true;   
     });
