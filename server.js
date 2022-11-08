@@ -4,7 +4,8 @@ var socket_io = require('socket.io');
 const words = require('./lib/words')
 
 const app = express();
-app.use(express.static('public'));
+app.use('/', express.static('public'));
+//app.use('/', express.static(path.join(__dirname, 'public')))
 
 var server = http.Server(app);
 var io = socket_io(server);
