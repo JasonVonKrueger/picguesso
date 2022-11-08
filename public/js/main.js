@@ -183,13 +183,29 @@ let pictionary = function() {
         drawing = true;   
     });
     
-    canvas.on('touchmove', function(event) { 
-        drawing = true;   
-    });    
+    // canvas.on('touchmove', function(event) { 
+    //     drawing = true;   
+    // });    
 
-    canvas.on('touchend', function(event) { 
-        drawing = false;   
-    });  
+    // canvas.on('touchend', function(event) { 
+    //     drawing = false;   
+    // });  
+
+    canvas.on('touchmove', function(event) {
+        let offset = canvas.offset();
+        obj.position = {x: event.pageX - offset.left,
+                        y: event.pageY - offset.top};
+        
+        if (drawing == true && click == true) {
+            draw(obj);
+            socket.emit('draw', obj);
+        };
+    });
+
+
+
+
+
 
     canvas.on('mousedown', function(event) { 
         drawing = true;   
