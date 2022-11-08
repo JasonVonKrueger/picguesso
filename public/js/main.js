@@ -180,8 +180,9 @@ let pictionary = function() {
     });
 
     canvas.on('touchstart', function(event) { 
-        drawing = true;   
-    });
+        event.preventDefault()
+        drawing = true 
+    })
     
     // canvas.on('touchmove', function(event) { 
     //     drawing = true;   
@@ -192,6 +193,7 @@ let pictionary = function() {
     // });  
 
     canvas.on('touchmove', function(event) {
+        event.preventDefault()
         let offset = canvas.offset();
         obj.position = {x: event.pageX - offset.left,
                         y: event.pageY - offset.top};
