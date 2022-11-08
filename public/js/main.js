@@ -1,11 +1,12 @@
-let socket = io();
-let user;
-let context;
-let canvas;
-let click = false;
+let socket = io()
+let user = null
+let context = null
+let canvas = null
+let click = false
 
 $(document).ready(function() {
-    $('#modal_nick').click();
+    // trigger the nickname modal
+    $('#modal_nick').click()
 
     canvas = $('#canvas');
     context = canvas[0].getContext('2d');
@@ -25,7 +26,7 @@ $(document).ready(function() {
     socket.on('reset', reset);
     socket.on('clear screen', clearScreen);
 
-});
+})
 
 /* ************************************************************************************
 ______                _   _                 ___                  _   _             
@@ -39,16 +40,18 @@ ______                _   _                 ___                  _   _
 
 // ****************************************************************
 function usernameAsk() {
-    $('.user').fadeIn(500);
+    $('.user').fadeIn(500)
+    $('#username').focus()
+
     $('.user').submit(function() {
         event.preventDefault();
-        user = $('#username').val().trim();
+        user = $('#username').val().trim()
 
         if (user == '') {
             return false
-        };
+        }
 
-        var index = users.indexOf(user);
+        let index = users.indexOf(user)
 
         if (index > -1) {
             $('#alert_nickname').fadeIn(500);
@@ -62,11 +65,11 @@ function usernameAsk() {
     });
 };
 
-var clearScreen = function() {
+let clearScreen = function() {
     context.clearRect(0, 0, canvas[0].width, canvas[0].height);
 };
 
-var guesser = function() {
+let guesser = function() {
     clearScreen();
     click = false;
     console.log('draw status: ' + click);
@@ -90,7 +93,7 @@ var guesser = function() {
     });
 };
 
-var guessword = function(data){
+let guessword = function(data){
     $('#guesses').text(data.username + "'s guess: " + data.guessword);
 
     if (click == true && data.guessword == $('span.word').text() ) {
@@ -101,40 +104,42 @@ var guessword = function(data){
     }
 };
 
-var drawWord = function(word) {
+let drawWord = function(word) {
     $('span.word').text(word);
     console.log('Your word to draw is: ' + word);
 };
 
-var users = [];
+let users = [];
 
-var userlist = function(names) {
+let userlist = function(names) {
     users = names;
-    var html = '<p class="chatbox-header">' + 'Players' + '</p>';
+    let html = '<p class="chatbox-header">' + 'Players' + '</p>';
+
     for (var i = 0; i < names.length; i++) {
         html += '<li>' + names[i] + '</li>';
     };
-    $('ul').html(html);
-};
 
-var newDrawer = function() {
+    $('ul').html(html);
+}
+
+let newDrawer = function() {
     socket.emit('new drawer', user);
     clearScreen();
     $('#guesses').empty();
-};
+}
 
-var correctAnswer = function(data) {
+let correctAnswer = function(data) {
     $('#guesses').html('<p>' + data.username + ' guessed correctly!' + '</p>');
 };
 
-var reset = function(name) {
+let reset = function(name) {
     clearScreen();
     $('#guesses').empty();
     console.log('New drawer: ' + name);
     $('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
 };
 
-var draw = function(obj) {
+let draw = function(obj) {
     context.fillStyle = obj.color;
     context.beginPath();
     context.arc(obj.position.x, obj.position.y,
@@ -142,7 +147,7 @@ var draw = function(obj) {
     context.fill();
 };
 
-var pictionary = function() {
+let pictionary = function() {
     clearScreen();
     click = true;
     console.log('draw status: ' + click);
@@ -177,12 +182,13 @@ var pictionary = function() {
     canvas.on('mousedown', function(event) { 
         drawing = true;   
     });
+
     canvas.on('mouseup', function(event) {
         drawing = false;
     });
 
     canvas.on('mousemove', function(event) {
-        var offset = canvas.offset();
+        let offset = canvas.offset();
         obj.position = {x: event.pageX - offset.left,
                         y: event.pageY - offset.top};
         
