@@ -4,7 +4,7 @@ var socket_io = require('socket.io');
 const words = require('./lib/words')
 
 const app = express();
-app.use(express.static('public'));
+app.use('/picguesso', express.static('public'));
 
 var server = http.Server(app);
 var io = socket_io(server);
@@ -150,7 +150,3 @@ io.on('connection', function (socket) {
 server.listen(process.env.PORT || 9915, function() {
 	console.log('Server started at http://localhost:9915');
 });
-
-app.get('/listgames', function(req, res) {
-    res.send({ msg: 'none' }) 
-})
