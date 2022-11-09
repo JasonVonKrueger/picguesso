@@ -179,10 +179,10 @@ let pictionary = function() {
         };
     });
 
-    canvas.on('touchstart', function(event) { 
-        event.preventDefault()
-        drawing = true 
-    })
+    // canvas.on('touchstart', function(event) { 
+    //     event.preventDefault()
+    //     drawing = true 
+    // })
     
     // canvas.on('touchmove', function(event) { 
     //     drawing = true;   
