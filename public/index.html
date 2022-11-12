@@ -19,25 +19,55 @@
     <body>
         <nav class="border fixed split-nav">
             <div class="nav-brand">
-                <span style="display: inline-block"><h3>Picguesso</h3></span>
                 <span style="display: inline-block"><img src="images/pencil.svg" width="40px" style="border: 0"/></span>
+                <span style="display: inline-block"><h3>Picguesso</h3></span>
             </div>
         </nav>
         
         <div id="main" class="container-lg" style="margin-top: 8%;">
             <div class="row" style="justify-content: center;">
-                <canvas id="canvas" class="border border-primary"></canvas>
-                <div class="users border border-primary">
-                    <ul></ul>
-                    <div id="guesses"></div>
-                    <div class="draw-buttons">
-                        <button value="0" class="clear" type="button">X</button>
-                        <button value="#000000" class="black" type="button"></button>
-                        <button value="#0000EE" class="blue" type="button"></button>
-                        <button value="#66CD00" class="green" type="button"></button>
-                        <button value="#FF0000" class="red" type="button"></button>
-                        <button value="#FFFF00" class="yellow" type="button"></button>
-                        <button value="white" class="white" type="button"></button>
+                <!-- 1st column --- players list -->
+                <div class="col-4 col border border-primary" style="background-color: #fff;">
+                    <div class="users">
+                        <h4>Players</h4>
+                        <ul></ul>                          
+                        <div id="guesses"></div>
+                    </div>
+
+                    <div id="con_player_text">
+                        <form id="form_player_text">
+                            <div class="row">
+                                <div class="col sm-8">
+                                    <div class="form-group">
+                                        <input type="text" id="player_text" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col sm-4">
+                                    <div class="form-group">
+                                        <button type="submit">Guess</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 2nd column -- colors and canvas -->
+                <div class="col-8 col">
+                    <div class="row">
+                        <div class="draw-buttons">
+                            <button value="0" class="clear" type="button">X</button>
+                            <button value="#000000" class="black" type="button"></button>
+                            <button value="#0000EE" class="blue" type="button"></button>
+                            <button value="#66CD00" class="green" type="button"></button>
+                            <button value="#FF0000" class="red" type="button"></button>
+                            <button value="#FFFF00" class="yellow" type="button"></button>
+                            <button value="white" class="white" type="button"></button>
+                        </div>
+                    </div>
+    
+                    <div class="row">
+                        <canvas id="canvas" class="border border-primary"></canvas>
                     </div>
                 </div>
             </div>
@@ -52,29 +82,55 @@
             </div>
         </div>
 
-        <!-- hidden modal trigger -->
-        <div class="row flex-spaces child-borders hidden">
-            <label class="margin" for="modal_nick">Another Modal!</label>
-        </div>
-        <input class="modal-state" id="modal_nick" type="checkbox">
 
         <!-- modals -->
-        <div class="modal nickname">
+        <input class="modal-state" id="modal_nick_trigger" type="checkbox">
+        <div class="modal" id="modal_nick">
+            <div class="modal-body">
+                <label class="btn-close" for="modal_nick">X</label>
+                <h4 class="modal-title">Let's play Picguesso!!</h4>
+                <p class="modal-text">
+                    <form id="form_nickname">
+                    <div class="row">
+                        <div class="col sm-8">
+                            <div class="form-group">
+                                <input type="text" id="nickname" placeholder="Enter a nickname" autofocus>
+                            </div>
+                        </div>
+                        <div class="col sm-4">
+                            <div class="form-group">
+                                <button type="submit">Play</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </p>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        <!-- <div class="modal nickname">
             <form class="user">
             <label class="modal-bg" for="modal-2"></label>
-            <div class="modal-body border border-primary" style="width: 30%;">
+            <div class="modal-body border border-primary" style="width: 40%;">
                 <label class="btn-close" for="modal-2">X</label>
                 <h4 class="modal-title">Let's play Picguesso!!</h4>
                 <p class="modal-text">
                     <div class="row">
                         <div class="col sm-8">
                             <div class="form-group">
-                                <input id="username" class="input-block" type="text" placeholder="Enter a nickname" maxlength="24" autofocus>
+                                <input id="nickname" class="input-block" type="text" placeholder="Enter a nickname" maxlength="24" autofocus>
                             </div>
                         </div>
                         <div class="col sm-4">
                             <div class="form-group">
-                                <button type="submit" class="input-block" id="submitname">Submit</button>
+                                <button type="submit" class="btn" id="submitname">Submit</button>
                             </div>
                         </div>
                     </div>
@@ -83,10 +139,10 @@
                 </p>
             </div>
             </form>
-        </div>
+        </div> -->
 
         <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-        <!-- <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script> -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="js/main.js"></script>
         

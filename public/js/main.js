@@ -3,17 +3,18 @@ let user = null
 let context = null
 let canvas = null
 let click = false
+let users = []
 
 $(document).ready(function() {
     // trigger the nickname modal
-    $('#modal_nick').click()
+    $('#modal_nick_trigger').click()
 
     canvas = $('#canvas');
-    context = canvas[0].getContext('2d');
-    canvas[0].width = canvas[0].offsetWidth;
-    canvas[0].height = canvas[0].offsetHeight;
+    context = canvas[0].getContext('2d')
+    canvas[0].width = canvas[0].offsetWidth
+    canvas[0].height = canvas[0].offsetHeight
 
-    usernameAsk();
+    getNickname();
 
     socket.on('userlist', userlist);
     socket.on('guesser', guesser);
@@ -39,13 +40,13 @@ ______                _   _                 ___                  _   _
 ************************************************************************************ */
 
 // ****************************************************************
-function usernameAsk() {
-    $('.user').fadeIn(500)
-    $('#username').focus()
+function getNickname() {
+    $('#modal_nick').fadeIn(500)
+    $('#nickname').focus()
 
-    $('.user').submit(function() {
+    $('#form_nickname').submit(function() {
         event.preventDefault();
-        user = $('#username').val().trim()
+        user = $('#nickname').val().trim()
 
         if (user == '') {
             return false
@@ -60,7 +61,7 @@ function usernameAsk() {
         
         socket.emit('join', user);
         $('.nickname').fadeOut(300);
-        $('.user').fadeOut(300);
+        $('#modal_nick').fadeOut(300);
         $('input.guess-input').focus();
     });
 };
@@ -88,18 +89,18 @@ let guesser = function() {
         };
 
         console.log(user + "'s guess: " + guess);
-        socket.emit('guessword', {username: user, guessword: guess});
+        socket.emit('guessword', {nickname: user, guessword: guess});
         $('.guess-input').val('');
     });
 };
 
 let guessword = function(data){
-    $('#guesses').text(data.username + "'s guess: " + data.guessword);
+    $('#guesses').text(data.nickname + "'s guess: " + data.guessword);
 
     if (click == true && data.guessword == $('span.word').text() ) {
-        console.log('guesser: ' + data.username + ' draw-word: ' + $('span.word').text());
-        socket.emit('correct answer', {username: data.username, guessword: data.guessword});
-        socket.emit('swap rooms', {from: user, to: data.username});
+        console.log('guesser: ' + data.nickname + ' draw-word: ' + $('span.word').text());
+        socket.emit('correct answer', {nickname: data.nickname, guessword: data.guessword});
+        socket.emit('swap rooms', {from: user, to: data.nickname});
         click = false;
     }
 };
@@ -108,8 +109,6 @@ let drawWord = function(word) {
     $('span.word').text(word);
     console.log('Your word to draw is: ' + word);
 };
-
-let users = [];
 
 let userlist = function(names) {
     users = names;
@@ -129,7 +128,7 @@ let newDrawer = function() {
 }
 
 let correctAnswer = function(data) {
-    $('#guesses').html('<p>' + data.username + ' guessed correctly!' + '</p>');
+    $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>');
 };
 
 let reset = function(name) {
@@ -159,7 +158,7 @@ let pictionary = function() {
     var color;
     var obj = {};
 
-    $('.draw-buttons').on('click', 'button', function(){
+    $('.draw-buttons').on('click', 'button', function() {
         obj.color = $(this).attr('value');
         console.log(obj.color);
 
@@ -179,10 +178,10 @@ let pictionary = function() {
         };
     });
 
-    // canvas.on('touchstart', function(event) { 
-    //     event.preventDefault()
-    //     drawing = true 
-    // })
+    canvas.on('touchstart', function(event) { 
+        event.preventDefault()
+        drawing = true 
+    })
     
     // canvas.on('touchmove', function(event) { 
     //     drawing = true;   

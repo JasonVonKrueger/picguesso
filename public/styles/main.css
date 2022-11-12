@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap');
+
 * {
     box-sizing: border-box;
 }
@@ -13,10 +15,10 @@ body {
 .users {
     display: inline-block;
     background-color: white;
-    width: 25%;
-    height: 505px;
-    margin: 10px 10px;
-    padding: 10px;
+    xwidth: 25%;
+    xheight: 505px;
+    xmargin: 10px 10px;
+    zpadding: 10px;
     vertical-align: top;
 }
 
@@ -144,6 +146,10 @@ canvas {
     display: none;
 }
 
+.modal-title {
+    xfont-family: 'Sedgwick Ave', cursive;
+}
+
 /* 
 
 .user {
@@ -157,7 +163,7 @@ canvas {
     margin: auto;
 } */
 
-/* #username {
+/* #nickname {
     width: 90%;
     font-size: 30px;
     padding: 5px;

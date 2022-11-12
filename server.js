@@ -23,14 +23,14 @@ io.on('connection', function (socket) {
 	io.emit('userlist', users);
 
 	socket.on('join', function(name) {
-		socket.username = name;
+		socket.nickname = name;
 
 		// user automatically joins a room under their own name
 		socket.join(name);
-		console.log(socket.username + ' has joined. ID: ' + socket.id);
+		console.log(socket.nickname + ' has joined. ID: ' + socket.id);
 
 		// save the name of the user to an array called users
-		users.push(socket.username);
+		users.push(socket.nickname);
 
 		// if the user is first to join OR 'drawer' room has no connections
 		if (users.length == 1 || typeof io.sockets.adapter.rooms['drawer'] === 'undefined') {
@@ -39,12 +39,12 @@ io.on('connection', function (socket) {
 			socket.join('drawer');
 
 			// server submits the 'drawer' event to this user
-			io.in(socket.username).emit('drawer', socket.username);
-			console.log(socket.username + ' is a drawer');
+			io.in(socket.nickname).emit('drawer', socket.nickname);
+			console.log(socket.nickname + ' is a drawer');
 
 			// send the random word to the user inside the 'drawer' room
-			io.in(socket.username).emit('draw word', newWord());
-		//	console.log(socket.username + "'s draw word (join event): " + newWord());
+			io.in(socket.nickname).emit('draw word', newWord());
+		//	console.log(socket.nickname + "'s draw word (join event): " + newWord());
 		} 
 
 		// if there are more than one names in users 
@@ -55,8 +55,8 @@ io.on('connection', function (socket) {
 			socket.join('guesser');
 
 			// server submits the 'guesser' event to this user
-			io.in(socket.username).emit('guesser', socket.username);
-			console.log(socket.username + ' is a guesser');
+			io.in(socket.nickname).emit('guesser', socket.nickname);
+			console.log(socket.nickname + ' is a guesser');
 		}
 	
 		// update all clients with the list of users
@@ -71,19 +71,19 @@ io.on('connection', function (socket) {
 
 	// submit each client's guesses to all clients
 	socket.on('guessword', function(data) {
-		io.emit('guessword', { username: data.username, guessword: data.guessword})
-		console.log('guessword event triggered on server from: ' + data.username + ' with word: ' + data.guessword);
+		io.emit('guessword', { nickname: data.nickname, guessword: data.guessword})
+		console.log('guessword event triggered on server from: ' + data.nickname + ' with word: ' + data.guessword);
 	});
 
 	socket.on('disconnect', function() {
 		for (var i = 0; i < users.length; i++) {
 
 			// remove user from users list
-			if (users[i] == socket.username) {
+			if (users[i] == socket.nickname) {
 				users.splice(i, 1);
 			};
 		};
-		console.log(socket.username + ' has disconnected.');
+		console.log(socket.nickname + ' has disconnected.');
 
 		// submit updated users list to all clients
 		io.emit('userlist', users);
@@ -125,7 +125,7 @@ io.on('connection', function (socket) {
 		socket.join('guesser');
 
 		// submit 'guesser' event to this user
-		socket.emit('guesser', socket.username);
+		socket.emit('guesser', socket.nickname);
 
 		// submit 'drawer' event to the name of user that was doubleclicked
 		io.in(data.to).emit('drawer', data.to);
@@ -139,7 +139,7 @@ io.on('connection', function (socket) {
 
 	socket.on('correct answer', function(data) {
 		io.emit('correct answer', data);
-		console.log(data.username + ' guessed correctly with ' + data.guessword);
+		console.log(data.nickname + ' guessed correctly with ' + data.guessword);
 	});
 
 	socket.on('clear screen', function(name) {
