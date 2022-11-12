@@ -9,10 +9,16 @@ $(document).ready(function() {
     // trigger the nickname modal
     $('#modal_nick_trigger').click()
 
+    let canvasWidth = document.getElementById('con_canvas').offsetWidth
+    let canvasHeight = document.getElementById('con_canvas').offsetHeight
+    
+
     canvas = $('#canvas');
     context = canvas[0].getContext('2d')
-    canvas[0].width = canvas[0].offsetWidth
-    canvas[0].height = canvas[0].offsetHeight
+    canvas[0].width = canvasWidth
+    canvas[0].height = canvasHeight
+
+    
 
     getNickname();
 
@@ -38,6 +44,15 @@ ______                _   _                 ___                  _   _
 \_|  \__,_|_| |_|\___|\__|_|\___/|_| |_| \____/ \__,_|_| |_|\___|\__|_|\___/|_| |_|                                                                                  
                                                                                    
 ************************************************************************************ */
+
+// ****************************************************************
+function guessWord(event) {
+    if (!$('#player_guess_text').val()) {
+        return false
+    }
+
+    alert('yo')
+}
 
 // ****************************************************************
 function getNickname() {
@@ -112,7 +127,7 @@ let drawWord = function(word) {
 
 let userlist = function(names) {
     users = names;
-    let html = '<p class="chatbox-header">' + 'Players' + '</p>';
+    let html = '<p class="chatbox-header"></p>';
 
     for (var i = 0; i < names.length; i++) {
         html += '<li>' + names[i] + '</li>';
@@ -158,7 +173,7 @@ let pictionary = function() {
     var color;
     var obj = {};
 
-    $('.draw-buttons').on('click', 'button', function() {
+    $('#con_colors').on('click', 'button', function() {
         obj.color = $(this).attr('value');
         console.log(obj.color);
 

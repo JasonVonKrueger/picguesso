@@ -15,45 +15,40 @@ body {
 .users {
     display: inline-block;
     background-color: white;
-    xwidth: 25%;
-    xheight: 505px;
-    xmargin: 10px 10px;
-    zpadding: 10px;
-    vertical-align: top;
 }
 
 ul {
     list-style-type: none;
     text-align: left;
-    font-size: 15px;
-    padding: 3px;
-    margin: 0 0;
-    height: 205px;
+    xfont-size: 15px;
+    xpadding: 3px;
+    xmargin: 0 0;
+    xheight: 205px;
 
 }
 
 ul>p {
     font-weight: bold;
-    margin: 10px 0;
+    xmargin: 10px 0;
 }
 
 #guesses>p {
-    margin: 1px 0;
-    padding: 2px;
+   xmargin: 1px 0;
+    xpadding: 2px;
 }
 
 ul>li {
     width: 40%;
     display: inline-block;
-    left-margin: -15px;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    word-wrap: break-word;
+    
+    xmargin-left: 5px;
+    xmargin-bottom: 5px;
+    xword-wrap: break-word;
 }
 
 .draw-buttons, #guesses {
-    text-align: center;
-    margin-bottom: 5px;
+    xtext-align: center;
+    xmargin-bottom: 5px;
 }
 
 .draw-buttons {
@@ -68,7 +63,7 @@ ul>li {
 
 #guess, .draw {
     background-color: white;
-    border-radius: 5px;
+    xborder-radius: 5px;
     display: block;
     margin: auto;
     width: 950px; 
@@ -77,22 +72,22 @@ ul>li {
 }
 
 .draw {
-    padding-left: 10px 25px;
+    xpadding-left: 10px 25px;
 }
 
 #guess {
-    padding: 10px;
+    xpadding: 10px;
 }
 
 #guess>.guess-input {
-    height: 30px;
-    width: 40%;
-    padding: 3px 5px;
-    font-size: 20px;
+    xheight: 30px;
+    xwidth: 40%;
+    xpadding: 3px 5px;
+    xfont-size: 20px;
 }
 
 .draw>p {
-    margin: 15px;
+    xmargin: 15px;
 }
 
 span.word {
@@ -105,16 +100,15 @@ span.word {
 }
 
 #top-message {
-    height: 70px;
-    padding: 5px 0px;
+    xheight: 70px;
+    xpadding: 5px 0px;
 }
 
 canvas {
-    width: 685px;
-    height: 505px;
+    xwidth: 685px;
+    xheight: 505px;
     background-color: white;
-    display: inline-block;
-    margin: 10px;
+    xdisplay: inline-block;
     cursor: pointer;
 }
 
