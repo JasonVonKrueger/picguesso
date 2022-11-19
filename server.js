@@ -1,26 +1,25 @@
-var http = require('http');
-var express = require('express');
-var socket_io = require('socket.io');
+var http = require('http')
+var express = require('express')
+var socket_io = require('socket.io')
 const words = require('./lib/words')
+const app = express()
+app.use(express.static('public'))
+app.use('/picguesso', express.static('public'))
 
-const app = express();
-app.use(express.static('public'));
-app.use('/picguesso', express.static('public'));
+var server = http.Server(app)
+var io = socket_io(server)
 
-var server = http.Server(app);
-var io = socket_io(server);
-
-var users = [];
+const players = []
 
 function newWord() {
-	wordcount = Math.floor(Math.random() * (words.length));
-	return words[wordcount];
-};
+	wordcount = Math.floor(Math.random() * (words.length))
+	return words[wordcount]
+}
 
-var wordcount;
+var wordcount
 
 io.on('connection', function (socket) {
-	io.emit('userlist', users);
+	io.emit('playerlist', players);
 
 	socket.on('join', function(name) {
 		socket.nickname = name;
@@ -29,11 +28,11 @@ io.on('connection', function (socket) {
 		socket.join(name);
 		console.log(socket.nickname + ' has joined. ID: ' + socket.id);
 
-		// save the name of the user to an array called users
-		users.push(socket.nickname);
+		// save the name of the user to an array called players
+		players.push(socket.nickname);
 
 		// if the user is first to join OR 'drawer' room has no connections
-		if (users.length == 1 || typeof io.sockets.adapter.rooms['drawer'] === 'undefined') {
+		if (players.length == 1 || typeof io.sockets.adapter.rooms['drawer'] === 'undefined') {
 
 			// place user into 'drawer' room
 			socket.join('drawer');
@@ -60,7 +59,7 @@ io.on('connection', function (socket) {
 		}
 	
 		// update all clients with the list of users
-		io.emit('userlist', users);
+		io.emit('playerlist', players);
 		
 	});
 
@@ -71,32 +70,32 @@ io.on('connection', function (socket) {
 
 	// submit each client's guesses to all clients
 	socket.on('guessword', function(data) {
-		io.emit('guessword', { nickname: data.nickname, guessword: data.guessword})
+		io.emit('guessword', { nickname: data.nickname, guessword: data.guessword })
 		console.log('guessword event triggered on server from: ' + data.nickname + ' with word: ' + data.guessword);
 	});
 
 	socket.on('disconnect', function() {
-		for (var i = 0; i < users.length; i++) {
+		for (var i = 0; i < players.length; i++) {
 
 			// remove user from users list
-			if (users[i] == socket.nickname) {
-				users.splice(i, 1);
+			if (players[i] == socket.nickname) {
+				players.splice(i, 1)
 			};
 		};
 		console.log(socket.nickname + ' has disconnected.');
 
-		// submit updated users list to all clients
-		io.emit('userlist', users);
+		// submit updated players list to all clients
+		io.emit('playerlist', players);
 
 		// if 'drawer' room has no connections..
 		if ( typeof io.sockets.adapter.rooms['drawer'] === "undefined") {
 			
-			// generate random number based on length of users list
-			var x = Math.floor(Math.random() * (users.length));
-			console.log(users[x]);
+			// generate random number based on length of players list
+			var x = Math.floor(Math.random() * (players.length));
+			console.log(players[x]);
 
 			// submit new drawer event to the random user in userslist
-			io.in(users[x]).emit('new drawer', users[x]);
+			io.in(players[x]).emit('new drawer', players[x]);
 		};
 	});
 

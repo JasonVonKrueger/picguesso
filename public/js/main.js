@@ -4,34 +4,32 @@ let context = null
 let canvas = null
 let click = false
 let users = []
+let nickname = null
+let toastContain = null
 
 $(document).ready(function() {
-    // trigger the nickname modal
-    $('#modal_nick_trigger').click()
+    document.getElementById('modal_nick').classList.remove('hidden')
 
-    let canvasWidth = document.getElementById('con_canvas').offsetWidth
-    let canvasHeight = document.getElementById('con_canvas').offsetHeight
-    
+    let canvasWidth = document.getElementById('canvas-container').offsetWidth
+    let canvasHeight = document.getElementById('canvas-container').offsetHeight
 
-    canvas = $('#canvas');
+    canvas = $('#canvas') //document.getElementById('canvas')
     context = canvas[0].getContext('2d')
     canvas[0].width = canvasWidth
     canvas[0].height = canvasHeight
 
-    
+    showToast('fred the cat')
 
-    getNickname();
-
-    socket.on('userlist', userlist);
-    socket.on('guesser', guesser);
-    socket.on('guessword', guessword);
-    socket.on('draw', draw);
-    socket.on('draw word', drawWord);
-    socket.on('drawer', pictionary);
-    socket.on('new drawer', newDrawer);
-    socket.on('correct answer', correctAnswer);
-    socket.on('reset', reset);
-    socket.on('clear screen', clearScreen);
+    socket.on('playerlist', userlist)
+    socket.on('guesser', guesser)
+    socket.on('guessword', guessword)
+    socket.on('draw', draw)
+    socket.on('draw word', drawWord)
+    socket.on('drawer', pictionary)
+    socket.on('new drawer', newDrawer)
+    socket.on('correct answer', correctAnswer)
+    socket.on('reset', reset)
+    socket.on('clear screen', clearScreen)
 
 })
 
@@ -46,18 +44,41 @@ ______                _   _                 ___                  _   _
 ************************************************************************************ */
 
 // ****************************************************************
+function clearScreen() {
+    context.clearRect(0, 0, canvas[0].width, canvas[0].height)
+}
+
+// ****************************************************************
 function guessWord(event) {
+    //event.preventDefault()
+
     if (!$('#player_guess_text').val()) {
         return false
     }
 
-    alert('yo')
+    var guess = $('#player_guess_text').val();
+
+
+    socket.emit('guessword', { nickname: nickname, guessword: guess })
+    $('#player_guess_text').val('')
 }
 
 // ****************************************************************
-function getNickname() {
-    $('#modal_nick').fadeIn(500)
-    $('#nickname').focus()
+function playClicked() {
+    nickname = (document.getElementById('nickname').value).trim()
+
+    if (!nickname) {
+        return false
+    }
+
+    socket.emit('join', nickname.trim())
+    document.getElementById('modal_nick').classList.add('hidden')
+}
+
+// ****************************************************************
+/* function getNickname() {
+    //$('#modal_nick').fadeIn(500)
+    //$('#nickname').focus()
 
     $('#form_nickname').submit(function() {
         event.preventDefault();
@@ -76,36 +97,38 @@ function getNickname() {
         
         socket.emit('join', user);
         $('.nickname').fadeOut(300);
-        $('#modal_nick').fadeOut(300);
+        //$('#modal_nick').fadeOut(300);
         $('input.guess-input').focus();
     });
-};
+}; */
 
-let clearScreen = function() {
-    context.clearRect(0, 0, canvas[0].width, canvas[0].height);
-};
+
 
 let guesser = function() {
+    document.getElementById('canvas').classList.add('no-pointer-events')
+
     clearScreen();
     click = false;
     console.log('draw status: ' + click);
     $('.draw').hide();
     $('#guesses').empty();
+
     console.log('You are a guesser');
+
     $('#guess').show();
-    $('.guess-input').focus();
+    $('#player_guess_text').focus();
 
     $('#guess').on('submit', function() {
-        event.preventDefault();
-        var guess = $('.guess-input').val();
+        // event.preventDefault();
+        // var guess = $('#player_guess_text').val();
 
-        if (guess == '') {
-            return false
-        };
+        // if (guess == '') {
+        //     return false
+        // };
 
-        console.log(user + "'s guess: " + guess);
-        socket.emit('guessword', {nickname: user, guessword: guess});
-        $('.guess-input').val('');
+        // console.log(nickname + "'s guess: " + guess);
+        // socket.emit('guessword', { nickname: nickname, guessword: guess })
+        // $('#player_guess_text').val('');
     });
 };
 
@@ -113,16 +136,16 @@ let guessword = function(data){
     $('#guesses').text(data.nickname + "'s guess: " + data.guessword);
 
     if (click == true && data.guessword == $('span.word').text() ) {
-        console.log('guesser: ' + data.nickname + ' draw-word: ' + $('span.word').text());
-        socket.emit('correct answer', {nickname: data.nickname, guessword: data.guessword});
-        socket.emit('swap rooms', {from: user, to: data.nickname});
-        click = false;
+        console.log('guesser: ' + data.nickname + ' draw-word: ' + $('span.word').text())
+        socket.emit('correct answer', { nickname: data.nickname, guessword: data.guessword })
+        socket.emit('swap rooms', { from: user, to: data.nickname })
+        click = false
     }
 };
 
 let drawWord = function(word) {
-    $('span.word').text(word);
-    console.log('Your word to draw is: ' + word);
+    $('span.word').text(word)
+    console.log('Your word to draw is: ' + word)
 };
 
 let userlist = function(names) {
@@ -173,7 +196,7 @@ let pictionary = function() {
     var color;
     var obj = {};
 
-    $('#con_colors').on('click', 'button', function() {
+    $('#color-selection').on('click', 'button', function() {
         obj.color = $(this).attr('value');
         console.log(obj.color);
 
@@ -186,10 +209,10 @@ let pictionary = function() {
 
     console.log('You are the drawer');
 
-    $('.users').on('dblclick', 'li', function() {
+    $('.players').on('dblclick', 'li', function() {
         if (click == true) {
             var target = $(this).text();
-            socket.emit('swap rooms', {from: user, to: target});
+            socket.emit('swap rooms', { from: user, to: target })
         };
     });
 
@@ -197,31 +220,17 @@ let pictionary = function() {
         event.preventDefault()
         drawing = true 
     })
-    
-    // canvas.on('touchmove', function(event) { 
-    //     drawing = true;   
-    // });    
-
-    // canvas.on('touchend', function(event) { 
-    //     drawing = false;   
-    // });  
 
     canvas.on('touchmove', function(event) {
         event.preventDefault()
         let offset = canvas.offset();
-        obj.position = {x: event.pageX - offset.left,
-                        y: event.pageY - offset.top};
+        obj.position = { x: event.pageX - offset.left, y: event.pageY - offset.top }
         
         if (drawing == true && click == true) {
             draw(obj);
             socket.emit('draw', obj);
         };
-    });
-
-
-
-
-
+    })
 
     canvas.on('mousedown', function(event) { 
         drawing = true;   
@@ -229,17 +238,43 @@ let pictionary = function() {
 
     canvas.on('mouseup', function(event) {
         drawing = false;
-    });
+    })
 
     canvas.on('mousemove', function(event) {
         let offset = canvas.offset();
-        obj.position = {x: event.pageX - offset.left,
-                        y: event.pageY - offset.top};
+        obj.position = { x: event.pageX - offset.left, y: event.pageY - offset.top }
         
         if (drawing == true && click == true) {
             draw(obj);
-            socket.emit('draw', obj);
-        };
-    });
+            socket.emit('draw', obj)
+        }
+    })
 
-};
+}
+
+// ****************************************************************
+function showToast(str) {
+    const FADE_DUR = 700
+    let duration = Math.max(6000, str.length * 80)
+
+    if (!toastContain) {
+        toastContain = document.createElement('div')
+        toastContain.classList.add('toast-container')
+        document.body.appendChild(toastContain)
+    }
+
+    const el = document.createElement('div')
+    el.classList.add('toast')
+    el.innerText = str
+    toastContain.prepend(el)
+
+    setTimeout(() => el.classList.add('open'))
+    setTimeout(
+        () => el.classList.remove('open'),
+        duration
+    )
+    setTimeout(
+        () => toastContain.removeChild(el),
+        duration + FADE_DUR
+    )
+}

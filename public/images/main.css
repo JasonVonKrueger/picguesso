@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Sedgwick+Ave&display=swap');
+
+body {
+    background-color: #F2F3F4;
+}
+
+
+.flex-top {
+    display: flex;
+    background-color: DodgerBlue;
+  }
+
+
+
+
+
+
+
+#guess, .draw {
+    border: 1px solid #76EEC6;
+}
+
+.users {
+    xdisplay: inline-block;
+    background-color: white;
+}
+
+.col {
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.row {
+    padding: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
+
+ul {
+    list-style-type: none;
+    xtext-align: left;
+    xfont-size: 15px;
+    xpadding: 3px;
+    xmargin: 0 0;
+    xheight: 205px;
+
+}
+
+ul>p {
+    font-weight: bold;
+    xmargin: 10px 0;
+}
+
+#guesses>p {
+   xmargin: 1px 0;
+    xpadding: 2px;
+}
+
+ul>li {
+    width: 40%;
+    display: inline-block;
+    
+    xmargin-left: 5px;
+    xmargin-bottom: 5px;
+    xword-wrap: break-word;
+}
+
+.draw-buttons, #guesses {
+    xtext-align: center;
+    xmargin-bottom: 5px;
+}
+
+.draw-buttons {
+    height: 35px;
+}
+
+#guesses {
+    font-style: italic;
+    font-size: 16px;
+    height: 28px;
+}
+
+#guess, .draw {
+    background-color: white;
+    xborder-radius: 5px;
+    xdisplay: block;
+    xmargin: auto;
+    xwidth: 950px; 
+    xheight: 55px;
+
+}
+
+.draw {
+    xpadding-left: 10px 25px;
+}
+
+#guess {
+    xpadding: 10px;
+}
+
+#guess>.guess-input {
+    xheight: 30px;
+    xwidth: 40%;
+    xpadding: 3px 5px;
+    xfont-size: 20px;
+}
+
+.draw>p {
+    xmargin: 15px;
+}
+
+span.word {
+	font-weight: bolder;
+	color: #228B22;
+}
+
+.hidden {
+    display: none;
+}
+
+#top-message {
+    xheight: 70px;
+    xpadding: 5px 0px;
+}
+
+canvas {
+    xwidth: 685px;
+    xheight: 505px;
+    background-color: white;
+    xdisplay: inline-block;
+    cursor: pointer;
+}
+
+.black {
+    background-color: #000000;
+}
+
+.blue {
+    background-color: #0000EE;
+}
+
+.green {
+    background-color: #66CD00;
+}
+
+.red {
+    background-color: #FF0000;
+}
+
+.yellow {
+    background-color: #FFFF00;
+}
+
+.clear, .white {
+    background-color: white;
+}
+
+#alert_nickname {
+    display: none;
+}
+
+.modal-title {
+    xfont-family: 'Sedgwick Ave', cursive;
+}
+
+/* 
+
+.user {
+    position: relative;
+    background-color: white;
+    max-height: 300px;
+    max-width: 350px;
+    text-align: center;
+    padding: 25px 5px;
+    top: 20%;
+    margin: auto;
+} */
+
+/* #nickname {
+    width: 90%;
+    font-size: 30px;
+    padding: 5px;
+    margin: 10px;
+} */
+
