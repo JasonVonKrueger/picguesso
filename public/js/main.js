@@ -10,15 +10,13 @@ let toastContain = null
 $(document).ready(function() {
     document.getElementById('modal_nick').classList.remove('hidden')
 
-    let canvasWidth = document.getElementById('canvas-container').offsetWidth
-    let canvasHeight = document.getElementById('canvas-container').offsetHeight
+    let canvasWidth = document.getElementById('canvas-box').offsetWidth
+    let canvasHeight = document.getElementById('canvas-box').offsetHeight
 
     canvas = $('#canvas') //document.getElementById('canvas')
     context = canvas[0].getContext('2d')
     canvas[0].width = canvasWidth
     canvas[0].height = canvasHeight
-
-    showToast('fred the cat')
 
     socket.on('playerlist', userlist)
     socket.on('guesser', guesser)
@@ -173,7 +171,8 @@ let reset = function(name) {
     clearScreen();
     $('#guesses').empty();
     console.log('New drawer: ' + name);
-    $('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
+    showToast(`${name} is drawing now!`)
+    //$('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
 };
 
 let draw = function(obj) {
@@ -268,11 +267,16 @@ function showToast(str) {
     el.innerText = str
     toastContain.prepend(el)
 
-    setTimeout(() => el.classList.add('open'))
-    setTimeout(
-        () => el.classList.remove('open'),
+    setTimeout(function() { 
+        el.classList.add('open')
+    })
+
+    setTimeout(function() {
+            el.classList.remove('open')
+        },
         duration
     )
+
     setTimeout(
         () => toastContain.removeChild(el),
         duration + FADE_DUR
