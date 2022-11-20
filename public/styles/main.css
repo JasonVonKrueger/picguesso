@@ -4,25 +4,34 @@
 :root {
     --font-title: 'Sedgwick Ave', cursive;
     --font-box: 'Yanone Kaffeesatz', sans-serif;
+    --box-bg: #fff;
 }
 
 * {
     box-sizing: border-box;
+    font-family: var(--font-box);
 }
 
 body {
     width: 100vw;
     height: 100vh;
+    min-height: 100vh;
     background-color: #F2F3F4;
 }
 
-#brand {
+#header {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     background-color: #fff;
-    padding: 5px;
+    overflow: hidden;
+    z-index: 5;
+    padding: .5rem;
+    border-bottom: 2px solid rgb(63, 58, 47);
 }
 
-#brand .title {
+#header .title {
     font-family: var(--font-title);
     font-size: 2.5rem;
 }
@@ -31,35 +40,64 @@ body {
     pointer-events: none;
 }
 
-#top {
-    width: 100%;
-    padding: .5rem;
-    xmargin-left: auto;
-    xmargin-right: auto;
-    xborder: 5px solid #ccc;
-    xborder-radius: 10px;
+.box {
+    background-color: var(--box-bg);
 }
 
-.flex-container {
-    display: flex;
-    align-items: stretch;
-    background-color: #f1f1f1;
-    min-height: 80%;
-    height: 80%;
-}
-  
-.flex-container > div {
-    background-color: #fff;
-    margin: 10px;
-    font-size: 1.5rem;
+#canvas {
+    cursor: url('../images/pencil-cursor.png'), auto;
 }
 
-#players-container {
-    font-family: var(--font-box);
+#game-board {
+    display: grid;
+    grid-template-columns: 15% 75%;
+    margin-top: 5.5rem;
+    column-gap: 1rem;
+    xpadding: 10px;
+}
+
+#players-box {
     padding-top: 1rem;
     padding-left: 1rem;
+    font-size: 1.5rem; 
+}
+
+#color-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+}
+
+#color-box button {
+    margin-bottom: 1rem;
+}
+
+#drawing-box {
+    display: grid;
+    grid-template-columns: 5% 95%;
+    padding: 1rem;
+}
+
+#canvas-box {
+    width: 100%;
+    height: 100%;
+}
+
+#status-box {
+    background-color: var(--box-bg);
+    padding: 1rem;
+    text-align: center;
+    margin-top: 1rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
     font-size: 1.5rem;
-    min-width: 20rem;
+}
+
+.color-button {
+    width: 35px;
+    height: 35px;
+    padding: 0px;
+    cursor: pointer;
 }
 
 .pen-border {
@@ -71,28 +109,11 @@ button > .pen-border {
     border: solid 1px #000;
 }
 
-.color-button {
-    width: 35px;
-    height: 35px;
-    padding: 0px;
-    cursor: pointer;
-}
-
-#color-selection {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-}
-
-#color-selection button {
-    margin-bottom: 1rem;
-}
-
 input[type=text] {
     padding: 12px 20px;
     margin: 8px 0;
     outline: none;
-    background-color: white;
+    background-color: var(--box-bg);
 }
 
 #player_guess_text {
@@ -110,29 +131,12 @@ input[type=text] {
 
 button {
     padding: 12px 20px;
-    font-family: 'Yanone Kaffeesatz', sans-serif;
     font-size: 1.5rem;
-}
-
-.container {
-    background-color: #fff;
-    padding: 16px;
-    text-align: center;
-    font-family: 'Yanone Kaffeesatz', sans-serif;
-}
-
-#canvas {
-    cursor: url('../images/pencil-cursor.png'), auto;
-}
-
-#canvas-box {
-    min-height: 100%;
-    min-width: 100%;
 }
 
 .modal {
     position: fixed;
-    z-index: 1; 
+    z-index: 10; 
     left: 0;
     top: 0;
     width: 100%;
@@ -147,7 +151,7 @@ button {
     background-color: #fefefe;
     margin: 5% auto 15% auto;
     border: 1px solid #888;
-    font-family: 'Yanone Kaffeesatz', sans-serif;
+    text-align: center;
 }
 
 .close {
@@ -254,46 +258,26 @@ li {
 /* mobile layout */
 
 @media only screen and (max-width: 600px) {
-    #top {
-        width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        padding: .2rem;
-    }
-
-    .flex-container {
+    #game-board {
         display: block;
-        align-items: stretch;
-        background-color: #f1f1f1;
-        min-height: 100%;
-        min-width: 100%;
-    }
-      
-    .flex-container > div {
-        xposition: relative;
-        background-color: #fff;
-        margin: 0px;
-        font-size: 1rem;
+        xgrid-template-columns: 1% 99%;
+        margin-top: 5.5rem;
+       
     }
 
-    #brand {
-        width: 100%;
-        min-width: 100%;
-        background-color: #fff;
-        padding: 1rem;
-    }
-    
-    #brand .title {
-        font-family: var(--font-title);
-        font-size: 2.5rem;
+    #drawing-box {
+        display: grid;
+        grid-template-columns: auto auto;
+        left: -10px;
+        xpadding: 1rem;
     }
 
-    #players-container {
+    #players-box {
         display: none;
     }
 
     #canvas-box {
-        width: 100%;
+        swidth: 100%;
     }
 
     #color-box {
@@ -307,148 +291,3 @@ li {
     }
 
 }
-
-
-
-/* #guess, .draw {
-    border: 1px solid #76EEC6;
-}
-
-.users {
-    xdisplay: inline-block;
-    background-color: white;
-}
-
-.col {
-    padding: 0px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
-
-.row {
-    padding: 0px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-} */
-
-/* ul {
-    list-style-type: none;
-    xtext-align: left;
-    xfont-size: 15px;
-    xpadding: 3px;
-    xmargin: 0 0;
-    xheight: 205px;
-
-}
-
-ul>p {
-    font-weight: bold;
-    xmargin: 10px 0;
-}
-
-#guesses>p {
-   xmargin: 1px 0;
-    xpadding: 2px;
-}
-
-ul>li {
-    width: 40%;
-    display: inline-block;
-    
-    xmargin-left: 5px;
-    xmargin-bottom: 5px;
-    xword-wrap: break-word;
-} */
-
-/* .draw-buttons, #guesses {
-    xtext-align: center;
-    xmargin-bottom: 5px;
-}
-
-.draw-buttons {
-    height: 35px;
-}
-
-#guesses {
-    font-style: italic;
-    font-size: 16px;
-    height: 28px;
-}
-
-#guess, .draw {
-    background-color: white;
-    xborder-radius: 5px;
-    xdisplay: block;
-    xmargin: auto;
-    xwidth: 950px; 
-    xheight: 55px;
-
-}
-
-.draw {
-    xpadding-left: 10px 25px;
-} */
-
-/* #guess {
-    xpadding: 10px;
-}
-
-#guess>.guess-input {
-    xheight: 30px;
-    xwidth: 40%;
-    xpadding: 3px 5px;
-    xfont-size: 20px;
-}
-
-.draw>p {
-    xmargin: 15px;
-}
-
-span.word {
-	font-weight: bolder;
-	color: #228B22;
-}
-
-#top-message {
-    xheight: 70px;
-    xpadding: 5px 0px;
-} */
-
-/* canvas {
-    xwidth: 685px;
-    xheight: 505px;
-    background-color: white;
-    xdisplay: inline-block;
-    cursor: pointer;
-} */
-
-
-
-/* #alert_nickname {
-    display: none;
-}
-
-.modal-title {
-    xfont-family: 'Sedgwick Ave', cursive;
-} */
-
-/* 
-
-.user {
-    position: relative;
-    background-color: white;
-    max-height: 300px;
-    max-width: 350px;
-    text-align: center;
-    padding: 25px 5px;
-    top: 20%;
-    margin: auto;
-} */
-
-/* #nickname {
-    width: 90%;
-    font-size: 30px;
-    padding: 5px;
-    margin: 10px;
-} */
-

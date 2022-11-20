@@ -195,7 +195,7 @@ let pictionary = function() {
     var color;
     var obj = {};
 
-    $('#color-selection').on('click', 'button', function() {
+    $('#color-box').on('click', 'button', function() {
         obj.color = $(this).attr('value');
         console.log(obj.color);
 

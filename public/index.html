@@ -18,18 +18,14 @@
 
 <body>
 
-    <div id="top">
-   
-        <div id="brand" class="pen-border">
-            <span class="title" style="display: inline-block">Picguesso</span>
-            <span style="display: inline-block"><img src="images/pencil.svg" width="40px" /></span>
-        </div>
-            
+    <div id="header">
+        <span class="title" style="display: inline-block">Picguesso</span>
+        <span style="display: inline-block;"><img src="images/pencil.svg" width="50px" /></span>
+    </div>
 
-        <div class="flex-container">
-  
+    <div id="game-board">
             <!-- first column -->
-            <div id="players-container" style="flex-grow: 1;" class="pen-border">
+            <div id="players-box" class="pen-border box">
                 Players
                 <div class="players">
                     <ul></ul>
@@ -37,42 +33,60 @@
                 </div>
             </div>
 
-            <!-- second column -->
-            <div id="color-box" style="flex-grow: 1" class="pen-border">
-                <div id="color-selection">
+            <!-- second column -->       
+            <div id="drawing-box" class="pen-border box">
+                <div id="color-box" class="box">                  
                     <button value="0" class="clear color-button pen-border" type="button">X</button>
                     <button value="#000000" class="black color-button pen-border" type="button"></button>
                     <button value="#0000EE" class="blue color-button pen-border" type="button"></button>
                     <button value="#66CD00" class="green color-button pen-border" type="button"></button>
                     <button value="#FF0000" class="red color-button pen-border" type="button"></button>
                     <button value="#FFFF00" class="yellow color-button pen-border" type="button"></button>
-                    <button value="white" class="white color-button pen-border" type="button"></button>
+                    <button value="white" class="white color-button pen-border" type="button"></button>             
+                </div> 
+
+                <div id="canvas-box" class="box">
+                    <canvas id="canvas" class="box"></canvas>
                 </div>
             </div>
+    </div>
 
-            <!-- third column -->          
-            <div id="canvas-box" style="flex-grow: 8" class="pen-border">
-                <canvas id="canvas" class="" style="border: 0px solid black"></canvas>
-            </div>
-           
+    <!-- status bar -->
+    <div id="status-box" class="pen-border">
+        <div id="guess" class="hidden">
+            <input type="text" id="player_guess_text" placeholder="">
+            <button onclick="guessWord()">Guess</button>
         </div>
 
-        <div class="container pen-border" style="font-size: 1.5rem;">
-            <div id="guess" class="hidden">
-                <input type="text" id="player_guess_text" placeholder="">
-                <button onclick="guessWord()">Guess</button>
-            </div>
-
-            <div class="draw hidden">
-                The secret word is: <span class="word"></span>
-            </div>
+        <div class="draw hidden">
+            The secret word is: <span class="word"></span>
         </div>
+    </div>
+
+    <!-- modals -->
+    <div id="modal_nick" class="modal hidden">
+        <!-- <span onclick="document.getElementById('modal_nick').style.display='none'" class="close" title="Close Modal">×</span> -->
+        <div class="modal-content">
+            <h1>Let's play Picguesso!!</h1>
+            <!-- <p>Are you sure you want to delete your account?</p> -->
+
+            <div class="clearfix">
+                <input type="text" id="nickname" placeholder="Enter a nickname" class="pen-border" autofocus>
+                <button onclick="playClicked();" class="pen-border">Play</button>
+            </div>         
+        </div>
+    </div>
 
 
 
 
 
 
+
+
+
+    <div id="top">
+   
 
 
         <!--         <div id="main" class="flex-top" style="margin-top: 8%;">
@@ -84,35 +98,6 @@
                 </form>
             </div>
         </div> -->
-
-
-        <!-- modals -->
-        <div id="modal_nick" class="modal hidden">
-            <!-- <span onclick="document.getElementById('modal_nick').style.display='none'" class="close" title="Close Modal">×</span> -->
-            <div class="modal-content">
-                <div class="container">
-                    <h1>Let's play Picguesso!!</h1>
-                    <!-- <p>Are you sure you want to delete your account?</p> -->
-
-                    <div class="clearfix">
-                        <input type="text" id="nickname" placeholder="Enter a nickname" class="pen-border" autofocus>
-                        <button onclick="playClicked();" class="pen-border">Play</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -139,12 +124,6 @@
                 </p>
             </div>
         </div> -->
-
-
-
-
-
-
 
 
         <!-- <div class="modal nickname">
