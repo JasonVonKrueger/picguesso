@@ -7,6 +7,8 @@ let users = []
 let nickname = null
 let toastContain = null
 
+const sndBackground = new Howl({ src: ['../audio/BanjosUnite-320bit.mp3'], html5: true })
+
 $(document).ready(function() {
     document.getElementById('modal_nick').classList.remove('hidden')
 
@@ -71,6 +73,7 @@ function playClicked() {
 
     socket.emit('join', nickname.trim())
     document.getElementById('modal_nick').classList.add('hidden')
+    sndBackground.play();
 }
 
 // ****************************************************************
