@@ -6,6 +6,7 @@ let click = false
 let users = []
 let nickname = null
 let toastContain = null
+let musicIsPlaying = true
 
 const sndBackground = new Howl({ src: ['../audio/BanjosUnite-320bit.mp3'], html5: true })
 
@@ -74,6 +75,20 @@ function playClicked() {
     socket.emit('join', nickname.trim())
     document.getElementById('modal_nick').classList.add('hidden')
     sndBackground.play();
+}
+
+// ****************************************************************
+function toggleMusic() {
+    if (musicIsPlaying) {
+        sndBackground.stop()
+        document.getElementById('speaker-button').src = '../images/vol-off-48.png'
+        musicIsPlaying = false
+    }
+    else {
+        sndBackground.play()
+        document.getElementById('speaker-button').src = '../images/vol-on-48.png'
+        musicIsPlaying = true
+    }
 }
 
 // ****************************************************************

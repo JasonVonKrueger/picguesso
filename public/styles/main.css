@@ -48,6 +48,14 @@ body {
     cursor: url('../images/pencil-cursor.png'), auto;
 }
 
+#speaker-button {
+
+}
+
+#speaker-button:hover {
+    cursor: pointer;
+}
+
 #game-board {
     display: grid;
     grid-template-columns: 15% 75%;
