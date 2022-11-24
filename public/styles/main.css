@@ -60,6 +60,8 @@ body {
     display: grid;
     grid-template-columns: 15% 75%;
     margin-top: 5.5rem;
+    margin-left: .5rem;
+    margin-right: .5rem;
     column-gap: 1rem;
     xpadding: 10px;
 }
@@ -118,18 +120,19 @@ button > .pen-border {
 }
 
 input[type=text] {
-    padding: 12px 20px;
+    padding: 8px 15px;
     margin: 8px 0;
     outline: none;
     background-color: var(--box-bg);
+    font-size: 1.5rem;
 }
 
 #player_guess_text {
     background-image: url('../images/guess.jpeg');
     background-size: 40px 40px;
     background-repeat: no-repeat;
-    padding-left: 40px;
-    font-size: 1.5rem;
+    xpadding-left: 40px;
+    xfont-size: 1.5rem;
     xtransition: width 0.4s ease-in-out;
 }
 
@@ -138,7 +141,7 @@ input[type=text] {
 }
 
 button {
-    padding: 12px 20px;
+    padding: 8px 15px;
     font-size: 1.5rem;
 }
 
@@ -265,19 +268,32 @@ li {
 /*******************************************************************/
 /* mobile layout */
 
-@media only screen and (max-width: 600px) {
+@media only screen and (orientation: landscape) and (max-width: 860px) {
+    #players-box {
+        display: block;
+    }
+
+    #drawing-box {
+        display: none;
+    }
+
+    #status-box {
+        display: none;
+    }
+}
+
+@media only screen and (orientation: portrait) and (max-width: 600px) {
     #game-board {
         display: block;
-        xgrid-template-columns: 1% 99%;
         margin-top: 5.5rem;
-       
+        margin-left: .5rem;
+        margin-right: .5rem;
     }
 
     #drawing-box {
         display: grid;
         grid-template-columns: auto auto;
-        left: -10px;
-        xpadding: 1rem;
+        xleft: -10px;
     }
 
     #players-box {
