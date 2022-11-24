@@ -80,14 +80,20 @@
   </g>
   <text
      xml:space="preserve"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:23.2396px;line-height:1.25;font-family:'Kohinoor Gujarati';-inkscape-font-specification:'Kohinoor Gujarati, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.580989"
-     x="38.864582"
-     y="25.733149"
+     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:26.9745px;line-height:1.25;font-family:'Comic Sans MS';-inkscape-font-specification:'Comic Sans MS, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.674361"
+     x="41.678436"
+     y="25.814222"
      id="text3653"
-     transform="scale(0.87660003,1.1407711)"><tspan
+     transform="scale(0.81700772,1.2239786)"><tspan
        sodipodi:role="line"
        id="tspan3651"
-       x="38.864582"
-       y="25.733149"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:23.2396px;font-family:'Kohinoor Gujarati';-inkscape-font-specification:'Kohinoor Gujarati, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.580989">x</tspan></text>
+       x="41.678436"
+       y="25.814222"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:26.9745px;font-family:'Comic Sans MS';-inkscape-font-specification:'Comic Sans MS, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.674361">x</tspan></text>
+  <circle
+     id="path3927"
+     style="fill:#0000ff;stroke:#011400"
+     cx="39.193733"
+     cy="20.310923"
+     r="0.041040558" />
 </svg>
