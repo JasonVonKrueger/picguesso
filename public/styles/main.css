@@ -49,7 +49,8 @@ body {
 }
 
 #speaker-button {
-
+    margin-top: 6px;
+    padding-right: 1rem;
 }
 
 #speaker-button:hover {

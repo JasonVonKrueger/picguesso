@@ -81,12 +81,12 @@ function playClicked() {
 function toggleMusic() {
     if (musicIsPlaying) {
         sndBackground.stop()
-        document.getElementById('speaker-button').src = '../images/vol-off-48.png'
+        document.getElementById('speaker-button').src = '../images/music-off.svg'
         musicIsPlaying = false
     }
     else {
         sndBackground.play()
-        document.getElementById('speaker-button').src = '../images/vol-on-48.png'
+        document.getElementById('speaker-button').src = '../images/music-on.svg'
         musicIsPlaying = true
     }
 }
