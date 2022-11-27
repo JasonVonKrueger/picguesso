@@ -8,7 +8,11 @@ let nickname = null
 let toastContain = null
 let musicIsPlaying = true
 
-const sndBackground = new Howl({ src: ['../audio/BanjosUnite-320bit.mp3'], html5: true })
+const sndBackground1 = new Howl({ src: ['../audio/BanjosUnite-320bit.mp3'], html5: true })
+const sndBackground2 = new Howl({ src: ['../audio/Monkeys-Spinning-Monkeys.mp3'], html5: true })
+const sndBackground3 = new Howl({ src: ['../audio/Pixelland.mp3'], html5: true })
+
+let sndBackground = sndBackground2
 
 $(document).ready(function() {
     document.getElementById('modal_nick').classList.remove('hidden')
@@ -21,12 +25,18 @@ $(document).ready(function() {
     canvas[0].width = canvasWidth
     canvas[0].height = canvasHeight
 
-    socket.on('playerlist', userlist)
-    socket.on('guesser', guesser)
-    socket.on('guessword', guessword)
-    socket.on('draw', draw)
-    socket.on('draw word', drawWord)
-    socket.on('drawer', pictionary)
+    socket.on('REFRESH_PLAYERS', userlist)
+    socket.on('NEW_PLAYER_JOINED', function(msg) {
+        showToast(msg)
+    })
+
+    socket.on('JOINED_AS_DRAWER', joinAsDrawer)
+    socket.on('JOINED_AS_GUESSER', joinAsGuesser)
+    socket.on('SHOW_WORD', showWord)
+    socket.on('GUESS_WORD', guessword)
+    socket.on('PAINT', paint)
+    
+    
     socket.on('new drawer', newDrawer)
     socket.on('correct answer', correctAnswer)
     socket.on('reset', reset)
@@ -50,6 +60,12 @@ function clearScreen() {
 }
 
 // ****************************************************************
+function showWord(word) {
+    document.querySelector('.draw').classList.remove('hidden')
+    document.querySelector('#secret-word').innerHTML = word 
+}
+
+// ****************************************************************
 function guessWord(event) {
     //event.preventDefault()
 
@@ -57,11 +73,10 @@ function guessWord(event) {
         return false
     }
 
-    var guess = $('#player_guess_text').val();
+    let guess = document.querySelector('#player_guess_text').value
 
-
-    socket.emit('guessword', { nickname: nickname, guessword: guess })
-    $('#player_guess_text').val('')
+    socket.emit('GUESS_WORD', { nickname: nickname, guessword: guess })
+    document.querySelector('#player_guess_text').value = ''
 }
 
 // ****************************************************************
@@ -74,7 +89,7 @@ function playClicked() {
 
     socket.emit('join', nickname.trim())
     document.getElementById('modal_nick').classList.add('hidden')
-    sndBackground.play();
+    sndBackground.play()
 }
 
 // ****************************************************************
@@ -92,46 +107,27 @@ function toggleMusic() {
 }
 
 // ****************************************************************
-/* function getNickname() {
-    //$('#modal_nick').fadeIn(500)
-    //$('#nickname').focus()
+function paint(obj) {
+    context.fillStyle = obj.color
+    context.beginPath()
+    context.arc(obj.position.x, obj.position.y, 3, 0, 2 * Math.PI)
+    context.fill()
+}
 
-    $('#form_nickname').submit(function() {
-        event.preventDefault();
-        user = $('#nickname').val().trim()
+// ****************************************************************
+function joinAsGuesser() {
+    document.querySelector('#canvas').classList.add('no-pointer-events')
+    document.querySelector('#guess-word-box').classList.remove('hidden')
+    document.querySelector('#secret-word-box').classList.add('hidden')
 
-        if (user == '') {
-            return false
-        }
+    clearScreen()
+    click = false
+    console.log('draw status: ' + click)
+    $('#guesses').empty()
 
-        let index = users.indexOf(user)
+    // console.log('You are a guesser');
 
-        if (index > -1) {
-            $('#alert_nickname').fadeIn(500);
-            return false
-        };
-        
-        socket.emit('join', user);
-        $('.nickname').fadeOut(300);
-        //$('#modal_nick').fadeOut(300);
-        $('input.guess-input').focus();
-    });
-}; */
-
-
-
-let guesser = function() {
-    document.getElementById('canvas').classList.add('no-pointer-events')
-
-    clearScreen();
-    click = false;
-    console.log('draw status: ' + click);
-    $('.draw').hide();
-    $('#guesses').empty();
-
-    console.log('You are a guesser');
-
-    $('#guess').show();
+    //$('#guess').show();
     $('#player_guess_text').focus();
 
     $('#guess').on('submit', function() {
@@ -159,10 +155,6 @@ let guessword = function(data){
     }
 };
 
-let drawWord = function(word) {
-    $('span.word').text(word)
-    console.log('Your word to draw is: ' + word)
-};
 
 let userlist = function(names) {
     users = names;
@@ -193,45 +185,41 @@ let reset = function(name) {
     //$('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
 };
 
-let draw = function(obj) {
-    context.fillStyle = obj.color;
-    context.beginPath();
-    context.arc(obj.position.x, obj.position.y,
-                     3, 0, 2 * Math.PI);
-    context.fill();
-};
 
-let pictionary = function() {
-    clearScreen();
-    click = true;
-    console.log('draw status: ' + click);
-    $('#guess').hide();
-    $('#guesses').empty();
-    $('.draw').show();
 
-    var drawing;
-    var color;
-    var obj = {};
+// ****************************************************************
+function joinAsDrawer() {
+    document.querySelector('#canvas').classList.remove('no-pointer-events')
+    document.querySelector('#guess-word-box').classList.add('hidden')
+    document.querySelector('#secret-word-box').classList.remove('hidden')
+
+    let drawing = null,
+        color = '#000000',
+        obj = {}
+
+    clearScreen()
+    click = true
+
+    //$('#guess').hide();
+    $('#guesses').empty()
+    // $('.draw').show()
 
     $('#color-box').on('click', 'button', function() {
-        obj.color = $(this).attr('value');
-        console.log(obj.color);
+        obj.color = $(this).attr('value')
 
         if (obj.color === '0') {
-            socket.emit('clear screen', user);
-            context.fillStyle = 'white';
-            return;
+            socket.emit('clear screen', user)
+            context.fillStyle = 'white'
+            return
         };
-    });
-
-    console.log('You are the drawer');
+    })
 
     $('.players').on('dblclick', 'li', function() {
         if (click == true) {
             var target = $(this).text();
             socket.emit('swap rooms', { from: user, to: target })
         };
-    });
+    })
 
     canvas.on('touchstart', function(event) { 
         event.preventDefault()
@@ -240,13 +228,7 @@ let pictionary = function() {
 
     canvas.on('touchmove', function(event) {
         event.preventDefault()
-        let offset = canvas.offset();
-        obj.position = { x: event.pageX - offset.left, y: event.pageY - offset.top }
-        
-        if (drawing == true && click == true) {
-            draw(obj);
-            socket.emit('draw', obj);
-        };
+        draw(event)
     })
 
     canvas.on('mousedown', function(event) { 
@@ -258,14 +240,22 @@ let pictionary = function() {
     })
 
     canvas.on('mousemove', function(event) {
+        draw(event)
+    })
+
+    function draw(event) {
         let offset = canvas.offset();
         obj.position = { x: event.pageX - offset.left, y: event.pageY - offset.top }
         
-        if (drawing == true && click == true) {
-            draw(obj);
-            socket.emit('draw', obj)
+        if (drawing && click) {
+            context.fillStyle = obj.color
+            context.beginPath()
+            context.arc(obj.position.x, obj.position.y, 3, 0, 2 * Math.PI);
+            context.fill()
+
+            socket.emit('PAINT', obj)
         }
-    })
+    }
 
 }
 
@@ -285,18 +275,7 @@ function showToast(str) {
     el.innerText = str
     toastContain.prepend(el)
 
-    setTimeout(function() { 
-        el.classList.add('open')
-    })
-
-    setTimeout(function() {
-            el.classList.remove('open')
-        },
-        duration
-    )
-
-    setTimeout(
-        () => toastContain.removeChild(el),
-        duration + FADE_DUR
-    )
+    setTimeout(function() { el.classList.add('open') })
+    setTimeout(function() { el.classList.remove('open') }, duration)
+    setTimeout( function() { toastContain.removeChild(el) }, duration + FADE_DUR )
 }

@@ -54,13 +54,13 @@
 
     <!-- status bar -->
     <div id="status-box" class="pen-border">
-        <div id="guess" class="hidden">
-            <input type="text" id="player_guess_text" placeholder="">
+        <div id="guess-word-box" class="hidden">
+            <input type="text" id="player_guess_text" placeholder="What could it be?">
             <button onclick="guessWord()">Guess</button>
         </div>
 
-        <div class="draw hidden">
-            The secret word is: <span class="word"></span>
+        <div id="secret-word-box" class="draw hidden">
+            The secret word is: <span id="secret-word" class="word"></span>
         </div>
     </div>
 
@@ -76,83 +76,6 @@
                 <button onclick="playClicked();" class="pen-border">Play</button>
             </div>         
         </div>
-    </div>
-
-
-
-
-
-
-
-
-
-    <div id="top">
-   
-
-
-        <!--         <div id="main" class="flex-top" style="margin-top: 8%;">
-    
-            <div id="top-message">
-
-                <form id="guess" class="hidden">
-                    Guess the word! <input name="guess" class="guess-input" type="text">
-                </form>
-            </div>
-        </div> -->
-
-
-
-        <!-- <input class="modal-state" id="modal_nick_trigger" type="checkbox">
-        <div class="modal" id="xxmodal_nick">
-            <div class="modal-body">
-                <label class="btn-close" for="modal_nick">X</label>
-                <h4 class="modal-title">Let's play Picguesso!!</h4>
-                <p class="modal-text">
-                    <form id="form_nickname">
-                    <div class="row">
-                        <div class="col sm-8">
-                            <div class="form-group">
-                                <input type="text" id="nickname" placeholder="Enter a nickname" autofocus>
-                            </div>
-                        </div>
-                        <div class="col sm-4">
-                            <div class="form-group">
-                                <button type="submit">Play</button>
-                            </div>
-                        </div>
-                    </div>
-                    </form>
-                </p>
-            </div>
-        </div> -->
-
-
-        <!-- <div class="modal nickname">
-            <form class="user">
-            <label class="modal-bg" for="modal-2"></label>
-            <div class="modal-body border border-primary" style="width: 40%;">
-                <label class="btn-close" for="modal-2">X</label>
-                <h4 class="modal-title">Let's play Picguesso!!</h4>
-                <p class="modal-text">
-                    <div class="row">
-                        <div class="col sm-8">
-                            <div class="form-group">
-                                <input id="nickname" class="input-block" type="text" placeholder="Enter a nickname" maxlength="24" autofocus>
-                            </div>
-                        </div>
-                        <div class="col sm-4">
-                            <div class="form-group">
-                                <button type="submit" class="btn" id="submitname">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="alert_nickname" class="alert alert-danger">Nickname already exists!!</div>
-                </p>
-            </div>
-            </form>
-        </div> -->
-
     </div>
 
 

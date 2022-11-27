@@ -129,9 +129,9 @@ input[type=text] {
 }
 
 #player_guess_text {
-    background-image: url('../images/guess.jpeg');
-    background-size: 40px 40px;
-    background-repeat: no-repeat;
+    xbackground-image: url('../images/guess.jpeg');
+    xbackground-size: 40px 40px;
+    xbackground-repeat: no-repeat;
     xpadding-left: 40px;
     xfont-size: 1.5rem;
     xtransition: width 0.4s ease-in-out;
@@ -189,6 +189,10 @@ button {
 
 .hidden {
     display: none;
+}
+
+ul {
+    xlist-style-image: url('sqpurple.gif');
 }
 
 li {
