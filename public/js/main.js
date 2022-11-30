@@ -211,11 +211,12 @@ function joinAsDrawer() {
             socket.emit('clear screen', user)
             context.fillStyle = 'white'
             return
-        };
+        }
     })
 
     $('.players').on('dblclick', 'li', function() {
         if (click == true) {
+            alert('yo')
             var target = $(this).text();
             socket.emit('swap rooms', { from: user, to: target })
         };

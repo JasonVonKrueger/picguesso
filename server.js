@@ -76,7 +76,6 @@ io.on('connection', function (socket) {
 
 	socket.on('disconnect', function() {
 		for (var i = 0; i < players.length; i++) {
-
 			// remove user from users list
 			if (players[i] == socket.nickname) {
 				players.splice(i, 1)
