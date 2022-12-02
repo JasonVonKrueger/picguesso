@@ -32,6 +32,7 @@
                 <div id="player-template">
                     <span class="player-emoji"></span>
                     <span class="player-name"></span>
+                    <span class="player-score"></span>
                 </div>
                 <div id="guesses"></div>
             </div>
@@ -59,7 +60,7 @@
     <div id="status-box" class="pen-border">
         <div id="guess-word-box" class="hidden">
             <input type="text" id="player_guess_text" placeholder="What could it be?">
-            <button onclick="guessWord()">Guess</button>
+            <button onclick="sendGuess()">Guess</button>
         </div>
 
         <div id="secret-word-box" class="draw hidden">

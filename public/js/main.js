@@ -26,16 +26,18 @@ $(document).ready(function() {
     canvas[0].height = canvasHeight
 
     socket.on('REFRESH_PLAYERS', buildPlayerList)
+
     socket.on('NEW_PLAYER_JOINED', function(msg) {
         showToast(msg)
     })
 
+    socket.on('GUESS_WORD', guessword)
+
     socket.on('JOINED_AS_DRAWER', joinAsDrawer)
     socket.on('JOINED_AS_GUESSER', joinAsGuesser)
     socket.on('SHOW_WORD', showWord)
-    socket.on('GUESS_WORD', guessword)
+
     socket.on('PAINT', paint)
-    
     
     socket.on('new drawer', newDrawer)
     socket.on('correct answer', correctAnswer)
@@ -65,7 +67,7 @@ function showWord(word) {
 }
 
 // ****************************************************************
-function guessWord(event) {
+function sendGuess(event) {
     //event.preventDefault()
 
     if (!$('#player_guess_text').val()) {
@@ -141,18 +143,6 @@ function joinAsGuesser() {
         // socket.emit('guessword', { nickname: nickname, guessword: guess })
         // $('#player_guess_text').val('');
     })
-};
-
-let guessword = function(data){
-    
-    showToast(data.nickname + "'s guess: " + data.guessword)
-
-    if (click == true && data.guessword == $('span.word').text() ) {
-        console.log('guesser: ' + data.nickname + ' draw-word: ' + $('span.word').text())
-        socket.emit('correct answer', { nickname: data.nickname, guessword: data.guessword })
-        socket.emit('swap rooms', { from: user, to: data.nickname })
-        click = false
-    }
 }
 
 // ****************************************************************
@@ -176,6 +166,17 @@ function buildPlayerList(names) {
 
             document.querySelector('.players').appendChild(clone)
         }
+    }
+}
+
+let guessword = function(data) {
+    
+    showToast(data.nickname + "'s guess: <b>" + data.guessword + "</b>")
+
+    if (click == true && data.guessword == $('span.word').text() ) {
+        socket.emit('correct answer', { nickname: data.nickname, guessword: data.guessword })
+        socket.emit('swap rooms', { from: user, to: data.nickname })
+        click = false
     }
 }
 
@@ -272,9 +273,9 @@ function joinAsDrawer() {
 }
 
 // ****************************************************************
-function showToast(str) {
+function showToast(msg, style) {
     const FADE_DUR = 700
-    let duration = Math.max(6000, str.length * 80)
+    let duration = Math.max(6000, msg.length * 80)
 
     if (!toastContain) {
         toastContain = document.createElement('div')
@@ -284,7 +285,7 @@ function showToast(str) {
 
     const el = document.createElement('div')
     el.classList.add('toast')
-    el.innerText = str
+    el.innerText = msg
     toastContain.prepend(el)
 
     setTimeout(function() { el.classList.add('open') })
