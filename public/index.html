@@ -21,7 +21,7 @@
     <div id="header">
         <span class="title" style="display: inline-block">Picguesso</span>
         <span style="display: inline-block;"><img src="images/pencil.svg" width="50px" /></span>
-        <span style="float: right;"><img id="speaker-button" src="images/music-on.svg" onclick="toggleMusic()"/></span>
+        <span style="float: right;"><img id="speaker-button" src="images/music-off.svg" onclick="toggleMusic()"/></span>
     </div>
 
     <div id="game-board">
@@ -29,7 +29,10 @@
         <div id="players-box" class="pen-border box">
             Players
             <div class="players">
-                <ul></ul>
+                <div id="player-template">
+                    <span class="player-emoji"></span>
+                    <span class="player-name"></span>
+                </div>
                 <div id="guesses"></div>
             </div>
         </div>

@@ -12,7 +12,7 @@ const sndBackground1 = new Howl({ src: ['../audio/BanjosUnite-320bit.mp3'], html
 const sndBackground2 = new Howl({ src: ['../audio/Monkeys-Spinning-Monkeys.mp3'], html5: true })
 const sndBackground3 = new Howl({ src: ['../audio/Pixelland.mp3'], html5: true })
 
-let sndBackground = sndBackground2
+let sndBackground = sndBackground3
 
 $(document).ready(function() {
     document.getElementById('modal_nick').classList.remove('hidden')
@@ -25,7 +25,7 @@ $(document).ready(function() {
     canvas[0].width = canvasWidth
     canvas[0].height = canvasHeight
 
-    socket.on('REFRESH_PLAYERS', userlist)
+    socket.on('REFRESH_PLAYERS', buildPlayerList)
     socket.on('NEW_PLAYER_JOINED', function(msg) {
         showToast(msg)
     })
@@ -41,7 +41,6 @@ $(document).ready(function() {
     socket.on('correct answer', correctAnswer)
     socket.on('reset', reset)
     socket.on('clear screen', clearScreen)
-
 })
 
 /* ************************************************************************************
@@ -89,7 +88,7 @@ function playClicked() {
 
     socket.emit('join', nickname.trim())
     document.getElementById('modal_nick').classList.add('hidden')
-    sndBackground.play()
+    //sndBackground.play()
 }
 
 // ****************************************************************
@@ -128,7 +127,7 @@ function joinAsGuesser() {
     // console.log('You are a guesser');
 
     //$('#guess').show();
-    $('#player_guess_text').focus();
+    $('#player_guess_text').focus()
 
     $('#guess').on('submit', function() {
         // event.preventDefault();
@@ -141,11 +140,12 @@ function joinAsGuesser() {
         // console.log(nickname + "'s guess: " + guess);
         // socket.emit('guessword', { nickname: nickname, guessword: guess })
         // $('#player_guess_text').val('');
-    });
+    })
 };
 
 let guessword = function(data){
-    $('#guesses').text(data.nickname + "'s guess: " + data.guessword);
+    
+    showToast(data.nickname + "'s guess: " + data.guessword)
 
     if (click == true && data.guessword == $('span.word').text() ) {
         console.log('guesser: ' + data.nickname + ' draw-word: ' + $('span.word').text())
@@ -153,18 +153,36 @@ let guessword = function(data){
         socket.emit('swap rooms', { from: user, to: data.nickname })
         click = false
     }
-};
+}
+
+// ****************************************************************
+function buildPlayerList(names) {
+    const emojis = ['🥳', '🤠', '🥸', '😎', '🤓', '🧐', '💀', '💩', '🤡', '😼', '🙀', '🤖']
+    
+    for (let i=0; i<names.length; i++) {
+        if (!document.getElementById('plyr-' + names[i])) {
+            let random_emoji = emojis[Math.floor(Math.random() * emojis.length)]
+
+            const node = document.getElementById('player-template')
+            const clone = node.cloneNode(true)
+            clone.id = 'plyr-' + names[i]
+    
+            clone.querySelector('.player-emoji').innerHTML = random_emoji
+            clone.querySelector('.player-name').innerHTML = names[i]
+
+            document.querySelector('.players').appendChild(clone)
+        }
 
 
-let userlist = function(names) {
-    users = names;
-    let html = '<p class="chatbox-header"></p>';
+        // user.addEventListener('click', function(e) {
+        //     alert('yo')
+        // })
 
-    for (var i = 0; i < names.length; i++) {
-        html += '<li>' + names[i] + '</li>';
-    };
-
-    $('ul').html(html);
+        // spanRight.innerHTML = names[i]
+        // user.appendChild(spanLeft)
+        // user.appendChild(spanRight)
+        // document.querySelector('.players').appendChild(user)
+    }
 }
 
 let newDrawer = function() {
@@ -214,9 +232,8 @@ function joinAsDrawer() {
         }
     })
 
-    $('.players').on('dblclick', 'li', function() {
+    $('.user-emoji').on('dblclick', function() {
         if (click == true) {
-            alert('yo')
             var target = $(this).text();
             socket.emit('swap rooms', { from: user, to: target })
         };
