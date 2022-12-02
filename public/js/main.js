@@ -170,18 +170,12 @@ function buildPlayerList(names) {
             clone.querySelector('.player-emoji').innerHTML = random_emoji
             clone.querySelector('.player-name').innerHTML = names[i]
 
+            clone.addEventListener('click', function(e) {
+                alert('yo')
+            })
+
             document.querySelector('.players').appendChild(clone)
         }
-
-
-        // user.addEventListener('click', function(e) {
-        //     alert('yo')
-        // })
-
-        // spanRight.innerHTML = names[i]
-        // user.appendChild(spanLeft)
-        // user.appendChild(spanRight)
-        // document.querySelector('.players').appendChild(user)
     }
 }
 
