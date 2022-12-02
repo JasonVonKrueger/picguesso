@@ -171,7 +171,7 @@ function buildPlayerList(names) {
 
 let guessword = function(data) {
     
-    showToast(data.nickname + "'s guess: <b>" + data.guessword + "</b>")
+    showToast(data.nickname + "'s guess: " + data.guessword )
 
     if (click == true && data.guessword == $('span.word').text() ) {
         socket.emit('correct answer', { nickname: data.nickname, guessword: data.guessword })
