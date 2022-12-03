@@ -59,7 +59,7 @@ body {
 
 #game-board {
     display: grid;
-    grid-template-columns: 15% 75%;
+    grid-template-columns: 15% 75% auto;
     margin-top: 5.5rem;
     margin-left: .5rem;
     margin-right: .5rem;
@@ -297,8 +297,10 @@ li {
 @media only screen and (orientation: landscape) and (max-width: 860px) {
     #players-box {
         display: block;
-        width: 300px;
+        width: 400px;
         height: 280px;
+        border-radius: 0;
+        overflow: scroll;
     }
 
     #drawing-box {
@@ -307,6 +309,13 @@ li {
 
     #status-box {
         display: none;
+    }
+
+    #share-game-box {
+        display: block;
+        padding: 3rem;
+        width: 50%;
+        margin-left: 20rem;
     }
 }
 

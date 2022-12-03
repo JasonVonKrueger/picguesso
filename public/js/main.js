@@ -169,6 +169,19 @@ function buildPlayerList(names) {
     }
 }
 
+// ****************************************************************
+function shareGame(name) {
+    if (navigator.share) {
+        navigator.share({
+          title: 'Play Picguesso',
+          text: `${name} wants you to play!`,
+          url: 'https://picguesso.mrmonster.me',
+        })
+          .then(() => console.log('Successful share'))
+          .catch((error) => console.log('Error sharing', error));
+      }
+}
+
 let guessword = function(data) {
     
     showToast(data.nickname + "'s guess: " + data.guessword, 'guessed')

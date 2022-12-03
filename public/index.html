@@ -25,7 +25,7 @@
     </div>
 
     <div id="game-board">
-        <!-- first column -->
+        <!-- column -->
         <div id="players-box" class="pen-border box">
             Players
             <div class="players">
@@ -38,7 +38,7 @@
             </div>
         </div>
 
-        <!-- second column -->       
+        <!-- column -->       
         <div id="drawing-box" class="pen-border box">
             <div id="color-box" class="box">                  
                 <button value="0" class="clear color-button pen-border" type="button">X</button>
@@ -54,6 +54,11 @@
                 <canvas id="canvas" class="box"></canvas>
             </div>
         </div>
+
+        <!-- column -->  
+        <div id="share-game-box" class="hidden">
+            <button onclick="shareGame()">Send a link!</button>
+        </div>   
     </div>
 
     <!-- status bar -->
