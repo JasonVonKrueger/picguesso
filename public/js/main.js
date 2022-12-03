@@ -28,7 +28,7 @@ $(document).ready(function() {
     socket.on('REFRESH_PLAYERS', buildPlayerList)
 
     socket.on('NEW_PLAYER_JOINED', function(msg) {
-        showToast(msg)
+        showToast(msg, 'joined')
     })
 
     socket.on('GUESS_WORD', guessword)
@@ -171,7 +171,7 @@ function buildPlayerList(names) {
 
 let guessword = function(data) {
     
-    showToast(data.nickname + "'s guess: " + data.guessword )
+    showToast(data.nickname + "'s guess: " + data.guessword, 'guessed')
 
     if (click == true && data.guessword == $('span.word').text() ) {
         socket.emit('correct answer', { nickname: data.nickname, guessword: data.guessword })
@@ -285,6 +285,11 @@ function showToast(msg, style) {
 
     const el = document.createElement('div')
     el.classList.add('toast')
+
+    if (style) {
+        el.classList.add(style)
+    }
+    
     el.innerText = msg
     toastContain.prepend(el)
 

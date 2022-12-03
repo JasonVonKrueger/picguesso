@@ -154,6 +154,17 @@ button {
     font-size: 1.5rem;
 }
 
+#rotate-phone-msg {
+    font-family: var(--font-box);
+    font-size: 1.5rem;
+    background-color: #fff;
+    padding: .5rem;
+    xmargin-left: 2rem;
+    xmargin-right: 2rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
 .modal {
     position: fixed;
     z-index: 10; 
@@ -268,14 +279,16 @@ li {
   }
   
   /* Custom Toast Style */
-  .toast.critical {
-    background-color: pink;
-    border-color: red;
+  .toast.guessed {
+    background-color: rgb(91, 170, 101);
+    border-color: rgb(0, 0, 0);
+    color: #fff;
   }
 
-  .toast.waiting {
-    background-color: rgb(255, 255, 255);
-    border-color: rgb(232, 216, 38);
+  .toast.joined {
+    background-color: rgb(108, 127, 195);
+    border-color: rgb(0, 0, 0);
+    color: #fff;
   }
 
 /*******************************************************************/
@@ -327,6 +340,10 @@ li {
         display: flex;
         flex-direction: row;
         xpadding: .5rem;
+    }
+
+    #rotate-phone-msg {
+        display: block;
     }
 
 }

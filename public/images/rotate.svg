@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="34.041424pt"
+   height="39.986pt"
+   viewBox="0 0 34.041425 39.985999"
+   preserveAspectRatio="xMidYMid meet"
+   id="svg839"
+   sodipodi:docname="rotate.svg"
+   inkscape:version="1.0.1 (c497b03c, 2020-09-10)">
+  <defs
+     id="defs843" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1590"
+     inkscape:window-height="961"
+     id="namedview841"
+     showgrid="false"
+     inkscape:zoom="1.0289025"
+     inkscape:cx="-170.08838"
+     inkscape:cy="211.43798"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg839" />
+  <metadata
+     id="metadata833">
+Created by potrace 1.15, written by Peter Selinger 2001-2017
+<rdf:RDF>
+  <cc:Work
+     rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+  </cc:Work>
+</rdf:RDF>
+</metadata>
+  <g
+     transform="matrix(0.00312077,-1.6263583e-4,-1.6263583e-4,-0.00312077,1.0484546,40.854884)"
+     fill="#000000"
+     stroke="none"
+     id="g837">
+    <path
+       d="m 287,12789 c -106,-25 -201,-104 -251,-209 -28,-58 -31,-75 -31,-155 0,-81 4,-97 33,-157 46,-95 109,-148 257,-216 225,-104 749,-371 950,-483 1445,-806 2525,-1748 3277,-2859 791,-1166 1188,-2540 1129,-3902 -14,-321 -49,-663 -87,-841 l -6,-27 H 4516 c -664,0 -1063,-4 -1097,-10 -126,-24 -236,-114 -280,-232 -46,-124 -24,-272 56,-366 19,-22 466,-400 992,-839 C 4713,2054 5583,1328 6121,878 6660,429 7120,52 7144,40 c 104,-50 227,-49 334,1 37,18 403,378 1676,1648 895,894 1647,1652 1671,1683 138,184 74,448 -133,550 l -67,33 -1027,3 c -768,2 -1028,5 -1028,14 0,6 9,97 20,202 53,517 55,1125 4,1651 -196,2039 -1105,3740 -2644,4941 -1168,913 -2684,1541 -4530,1878 -277,50 -493,85 -720,116 -85,11 -185,25 -222,30 -79,12 -139,11 -191,-1 z"
+       id="path835" />
+  </g>
+</svg>
