@@ -170,11 +170,11 @@ function buildPlayerList(names) {
 }
 
 // ****************************************************************
-function shareGame(name) {
+function shareGame() {
     if (navigator.share) {
         navigator.share({
           title: 'Play Picguesso',
-          text: `${name} wants you to play!`,
+          text: `${nickname} wants you to play!`,
           url: 'https://picguesso.mrmonster.me',
         })
           .then(() => console.log('Successful share'))
