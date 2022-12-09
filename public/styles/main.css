@@ -19,6 +19,17 @@ body {
     background-color: #F2F3F4;
 }
 
+table, th, td {
+    border: 1px solid rgb(63, 58, 47);
+    border-collapse: collapse;
+}
+
+[id^="error_"] {
+    display: none;
+    color: #f44336;
+    font-size: 1.4rem;
+}
+
 #header {
     position: fixed;
     top: 0;
@@ -59,7 +70,7 @@ body {
 
 #game-board {
     display: grid;
-    grid-template-columns: 15% 75% auto;
+    grid-template-columns: 25% 65% auto;
     margin-top: 5.5rem;
     margin-left: .5rem;
     margin-right: .5rem;
@@ -68,10 +79,15 @@ body {
 }
 
 #players-box {
+    padding: 2rem;
     padding-top: 1rem;
     padding-left: 1rem;
     font-size: 1.5rem; 
     overflow: scroll;
+}
+
+[id^="plyr-"] {
+    cursor: pointer;
 }
 
 #color-box {
@@ -101,7 +117,7 @@ body {
     text-align: center;
     margin-top: 1rem;
     margin-left: .5rem;
-    margin-right: .5rem;
+    margin-right: 1.5rem;
     font-size: 1.5rem;
 }
 

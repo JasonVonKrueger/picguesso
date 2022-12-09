@@ -9,27 +9,29 @@ app.use('/picguesso', express.static('public'))
 const server = http.Server(app)
 const io = socket_io(server)
 
-let players = []
+const players = []
 
 function getNewWord() {
 	let wordcount = Math.floor(Math.random() * (words.length))
 	return words[wordcount]
 }
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket) {
+	// send a list of players upon connection
 	io.emit('REFRESH_PLAYERS', players)
 
-	socket.on('join', function(name) {
-		socket.nickname = name
+	socket.on('join', function(playerName) {
+		socket.playerName = playerName
+		
 
 		// user automatically joins a room under their own name
-		socket.join(name)
-		console.log(socket.nickname + ' has joined. ID: ' + socket.id)
+		socket.join(playerName)
+		console.log(playerName + ' has joined. ID: ' + socket.id)
 
 		// save the name of the user to an array called players
-		players.push(socket.nickname)
+		players.push(playerName)
 
-		let msg = socket.nickname + ' has joined the game!'
+		let msg = playerName + ' has joined the game!'
 		socket.broadcast.emit('NEW_PLAYER_JOINED', msg)
 
 		// if the 'drawer' room has no connections
@@ -38,13 +40,13 @@ io.on('connection', function (socket) {
 			socket.join('drawer')
 
 			// server submits the 'JOINED_AS_DRAWER' event to this user
-			io.in(socket.nickname).emit('JOINED_AS_DRAWER', socket.nickname)
-			console.log(socket.nickname + ' is a drawer')
+			io.in(socket.playerName).emit('JOINED_AS_DRAWER', socket.playerName)
+			console.log(socket.playerName + ' is a drawer')
 
 			// send the random word to the user inside the 'drawer' room
 			let word = getNewWord()
-			io.in(socket.nickname).emit('SHOW_WORD', word)
-			console.log(socket.nickname + "'s draw word (join event): " + word)
+			io.in(socket.playerName).emit('SHOW_WORD', word)
+			console.log(playerName + "'s draw word (join event): " + word)
 		} 
 		else {
 			// if there are more than one names in users 
@@ -54,8 +56,8 @@ io.on('connection', function (socket) {
 			socket.join('guesser')
 
 			// server submits the 'guesser' event to this user
-			io.in(socket.nickname).emit('JOINED_AS_GUESSER', socket.nickname)
-			console.log(socket.nickname + ' is a guesser')
+			io.in(socket.playerName).emit('JOINED_AS_GUESSER', socket.playerName)
+			console.log(playerName + ' is a guesser')
 		}
 	
 		// update all clients with the list of users
@@ -70,18 +72,18 @@ io.on('connection', function (socket) {
 
 	// submit each client's guesses to all clients
 	socket.on('GUESS_WORD', function(data) {
-		io.emit('GUESS_WORD', { nickname: data.nickname, guessword: data.guessword })
-		console.log('guessword event triggered on server from: ' + data.nickname + ' with word: ' + data.guessword)
+		io.emit('GUESS_WORD', { playerName: data.playerName, playerGuess: data.playerGuess })
+		console.log('guessword event triggered on server from: ' + data.playerName + ' with word: ' + data.playerGuess)
 	})
 
 	socket.on('disconnect', function() {
 		for (var i = 0; i < players.length; i++) {
 			// remove user from users list
-			if (players[i] == socket.nickname) {
+			if (players[i] == socket.playerName) {
 				players.splice(i, 1)
 			};
 		};
-		console.log(socket.nickname + ' has disconnected.');
+		console.log(socket.playerName + ' has disconnected.');
 
 		// submit updated players list to all clients
 		io.emit('REFRESH_PLAYERS', players);
@@ -119,7 +121,7 @@ io.on('connection', function (socket) {
 		socket.join('guesser')
 
 		// submit 'guesser' event to this user
-		socket.emit('guesser', socket.nickname)
+		socket.emit('guesser', socket.playerName)
 
 		// submit 'drawer' event to the name of user that was doubleclicked
 		io.in(data.to).emit('drawer', data.to)
@@ -133,7 +135,7 @@ io.on('connection', function (socket) {
 
 	socket.on('correct answer', function(data) {
 		io.emit('correct answer', data)
-		console.log(data.nickname + ' guessed correctly with ' + data.guessword)
+		console.log(data.playerName + ' guessed correctly with ' + data.playerGuess)
 	})
 
 	socket.on('clear screen', function(name) {

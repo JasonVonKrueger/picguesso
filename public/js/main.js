@@ -1,12 +1,21 @@
-let socket = io()
+const socket = io()
 let user = null
 let context = null
 let canvas = null
 let click = false
-let users = []
-let nickname = null
+
 let toastContain = null
 let musicIsPlaying = true
+
+//const socket = io({ autoConnect: false })
+
+const players = []
+
+const ME = {
+    name: '',
+    score: 0,
+    status: ''
+}
 
 const sndBackground1 = new Howl({ src: ['../audio/BanjosUnite-320bit.mp3'], html5: true })
 const sndBackground2 = new Howl({ src: ['../audio/Monkeys-Spinning-Monkeys.mp3'], html5: true })
@@ -15,10 +24,10 @@ const sndBackground3 = new Howl({ src: ['../audio/Pixelland.mp3'], html5: true }
 let sndBackground = sndBackground3
 
 $(document).ready(function() {
-    document.getElementById('modal_nick').classList.remove('hidden')
+    document.querySelector('#modal_nick').classList.remove('hidden')
 
-    let canvasWidth = document.getElementById('canvas-box').offsetWidth
-    let canvasHeight = document.getElementById('canvas-box').offsetHeight
+    let canvasWidth = document.querySelector('#canvas-box').offsetWidth
+    let canvasHeight = document.querySelector('#canvas-box').offsetHeight
 
     canvas = $('#canvas') //document.getElementById('canvas')
     context = canvas[0].getContext('2d')
@@ -43,6 +52,12 @@ $(document).ready(function() {
     socket.on('correct answer', correctAnswer)
     socket.on('reset', reset)
     socket.on('clear screen', clearScreen)
+
+    // hide the name error box when name input is in focus
+    document.querySelector('#player_name').addEventListener('focus', function() {
+        document.querySelector('#error_name').style.display = 'none'  
+        document.querySelector('#player_name').value = ''
+    })
 })
 
 /* ************************************************************************************
@@ -76,20 +91,25 @@ function sendGuess(event) {
 
     let guess = document.querySelector('#player_guess_text').value
 
-    socket.emit('GUESS_WORD', { nickname: nickname, guessword: guess })
+    socket.emit('GUESS_WORD', { playerName: ME.name, playerGuess: guess })
     document.querySelector('#player_guess_text').value = ''
 }
 
 // ****************************************************************
-function playClicked() {
-    nickname = (document.getElementById('nickname').value).trim()
-
-    if (!nickname) {
-        return false
+function startGame() {
+    ME.name = (document.querySelector('#player_name').value).trim()
+    if (!ME.name) return false
+    
+    // make sure the name doesn't exist already
+    if (players) {
+        if (players.includes(ME.name)) {
+            document.querySelector('#error_name').style.display = 'block'
+            return false
+        }
     }
 
-    socket.emit('join', nickname.trim())
-    document.getElementById('modal_nick').classList.add('hidden')
+    socket.emit('join', ME.name)
+    document.querySelector('#modal_nick').classList.add('hidden')
     //sndBackground.play()
 }
 
@@ -97,12 +117,12 @@ function playClicked() {
 function toggleMusic() {
     if (musicIsPlaying) {
         sndBackground.stop()
-        document.getElementById('speaker-button').src = '../images/music-off.svg'
+        document.querySelector('#speaker-button').src = '../images/music-off.svg'
         musicIsPlaying = false
     }
     else {
         sndBackground.play()
-        document.getElementById('speaker-button').src = '../images/music-on.svg'
+        document.querySelector('#speaker-button').src = '../images/music-on.svg'
         musicIsPlaying = true
     }
 }
@@ -120,6 +140,8 @@ function joinAsGuesser() {
     document.querySelector('#canvas').classList.add('no-pointer-events')
     document.querySelector('#guess-word-box').classList.remove('hidden')
     document.querySelector('#secret-word-box').classList.add('hidden')
+
+    ME.status = 'Guessing'
 
     clearScreen()
     click = false
@@ -148,23 +170,28 @@ function joinAsGuesser() {
 // ****************************************************************
 function buildPlayerList(names) {
     const emojis = ['🥳', '🤠', '🥸', '😎', '🤓', '🧐', '💀', '💩', '🤡', '😼', '🙀', '🤖']
-    
+    const table = document.querySelector('#players')
+
     for (let i=0; i<names.length; i++) {
         if (!document.getElementById('plyr-' + names[i])) {
-            let random_emoji = emojis[Math.floor(Math.random() * emojis.length)]
+            players.push(names[i])
 
-            const node = document.getElementById('player-template')
-            const clone = node.cloneNode(true)
-            clone.id = 'plyr-' + names[i]
-    
-            clone.querySelector('.player-emoji').innerHTML = random_emoji
-            clone.querySelector('.player-name').innerHTML = names[i]
+            let random_emoji = emojis[Math.floor(Math.random() * emojis.length)]   
 
-            clone.addEventListener('click', function(e) {
-                alert('yo')
+            let row = table.insertRow(i+1)         
+
+            let cell1 = row.insertCell(0)
+            cell1.id = 'plyr-' + names[i]
+            let cell2 = row.insertCell(1)
+            let cell3 = row.insertCell(2)
+
+            cell1.innerHTML = random_emoji + ' ' + names[i]
+            cell2.innerHTML = ME.status
+            cell3.innerHTML = ME.score
+
+            row.addEventListener('click', function(e) {
+                alert(e.target.innerHTML.slice(2))
             })
-
-            document.querySelector('.players').appendChild(clone)
         }
     }
 }
@@ -174,7 +201,7 @@ function shareGame() {
     if (navigator.share) {
         navigator.share({
           title: 'Play Picguesso',
-          text: `${nickname} wants you to play!`,
+          text: `${ME.name} wants you to play!`,
           url: 'https://picguesso.mrmonster.me',
         })
           .then(() => console.log('Successful share'))
@@ -218,6 +245,8 @@ function joinAsDrawer() {
     document.querySelector('#canvas').classList.remove('no-pointer-events')
     document.querySelector('#guess-word-box').classList.add('hidden')
     document.querySelector('#secret-word-box').classList.remove('hidden')
+
+    ME.status = 'Drawing'
 
     let drawing = null,
         color = '#000000',
