@@ -144,8 +144,8 @@ io.on('connection', function(socket) {
 		console.log(data.playerName + ' guessed correctly with ' + data.playerGuess)
 	})
 
-	socket.on('clear screen', function(name) {
-		io.emit('clear screen', name)
+	socket.on('CLEAR_CANVAS', function(name) {
+		io.emit('CLEAR_CANVAS', name)
 	})
 
 })

@@ -33,20 +33,62 @@ $(document).ready(function() {
     canvas[0].height = canvasHeight
 
     socket.on('REFRESH_PLAYERS', buildPlayerList)
-    socket.on('GUESS_WORD', guessword)
+
+    socket.on('GUESS_WORD', function(data) {
+        showToast(data.playerName + "'s guess: " + data.playerGuess, 'guessed')
+
+        if (click == true && data.playerGuess == $('span.word').text() ) {
+            socket.emit('correct answer', { nickname: data.playerName, guessword: data.playerGuess })
+            socket.emit('swap rooms', { from: user, to: data.playerName })
+            click = false
+        }     
+    })
+
     socket.on('JOINED_AS_DRAWER', joinAsDrawer)
     socket.on('JOINED_AS_GUESSER', joinAsGuesser)
-    socket.on('SHOW_WORD', showWord)
-    socket.on('PAINT', paint)
-    socket.on('new drawer', newDrawer)
-    socket.on('correct answer', correctAnswer)
-    socket.on('reset', reset)
-    socket.on('clear screen', clearScreen)
 
+    // ****************************************************************
+    socket.on('CLEAR_CANVAS', function(name) {
+        context.clearRect(0, 0, canvas[0].width, canvas[0].height)
+        context.fillStyle = 'white'
+    })
+
+    // ****************************************************************
+    socket.on('PAINT', paint)
+
+    // ****************************************************************
+    socket.on('SHOW_WORD', function(word) {
+        document.querySelector('.draw').classList.remove('hidden')
+        document.querySelector('#secret-word').innerHTML = word 
+    })
+
+    // ****************************************************************
+    socket.on('new drawer', function() {
+        socket.emit('new drawer', user)
+        clearScreen()
+        $('#guesses').empty()
+    })
+
+    // ****************************************************************
+    socket.on('correct answer', function(data) {
+        $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>')      
+    })
+
+    // ****************************************************************
+    socket.on('reset', function(name) {
+        clearScreen()
+        $('#guesses').empty()
+        console.log('New drawer: ' + name)
+        showToast(`${name} is drawing now!`)
+        //$('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
+    })
+
+    // ****************************************************************
     socket.on('NEW_PLAYER_JOINED', function(msg) {
         showToast(msg, 'joined')
     })
 
+    // ****************************************************************
     // hide the name error box when name input is in focus
     document.querySelector('#player_name').addEventListener('focus', function() {
         document.querySelector('#error_name').style.display = 'none'  
@@ -65,15 +107,28 @@ ______                _   _                 ___                  _   _
 ************************************************************************************ */
 
 // ****************************************************************
-function clearScreen() {
-    context.clearRect(0, 0, canvas[0].width, canvas[0].height)
+// function clearScreen() {
+//     context.clearRect(0, 0, canvas[0].width, canvas[0].height)
+// }
+
+// ****************************************************************
+function clearCanvas() {
+    alert('yo ' + ME.isDrawing)
+    if (!ME.isDrawing) {
+        return false
+    }
+
+    // context.clearRect(0, 0, canvas[0].width, canvas[0].height)
+    // context.fillStyle = 'white'
+    socket.emit('CLEAR_CANVAS', ME.name)
+    return
 }
 
 // ****************************************************************
-function showWord(word) {
-    document.querySelector('.draw').classList.remove('hidden')
-    document.querySelector('#secret-word').innerHTML = word 
-}
+// function showWord(word) {
+//     document.querySelector('.draw').classList.remove('hidden')
+//     document.querySelector('#secret-word').innerHTML = word 
+// }
 
 // ****************************************************************
 function sendGuess(event) {
@@ -133,14 +188,12 @@ function joinAsGuesser() {
     document.querySelector('#guess-word-box').classList.remove('hidden')
     document.querySelector('#secret-word-box').classList.add('hidden')
 
-    ME.status = 'Guessing'
+    ME.isDrawing = false
 
-    clearScreen()
+    //clearScreen()
     click = false
-    console.log('draw status: ' + click)
     $('#guesses').empty()
 
-    // console.log('You are a guesser');
 
     //$('#guess').show();
     $('#player_guess_text').focus()
@@ -186,29 +239,6 @@ function buildPlayerList(__players) {
             })
         }
     }
-
-    // for (let i=0; i<names.length; i++) {
-    //     if (!document.getElementById('plyr-' + names[i])) {
-    //         players.push(names[i])
-
-    //         let random_emoji = emojis[Math.floor(Math.random() * emojis.length)]   
-
-    //         let row = table.insertRow(i+1)         
-
-    //         let cell1 = row.insertCell(0)
-    //         cell1.id = 'plyr-' + names[i]
-    //         let cell2 = row.insertCell(1)
-    //         let cell3 = row.insertCell(2)
-
-    //         cell1.innerHTML = random_emoji + ' ' + names[i]
-    //         cell2.innerHTML = ME.status
-    //         cell3.innerHTML = ME.score
-
-    //         row.addEventListener('click', function(e) {
-    //             alert(e.target.innerHTML.slice(2))
-    //         })
-    //     }
-    // }
 }
 
 // ****************************************************************
@@ -224,34 +254,23 @@ function shareGame() {
       }
 }
 
-let guessword = function(data) {
-    
-    showToast(data.nickname + "'s guess: " + data.guessword, 'guessed')
+// let newDrawer = function() {
+//     socket.emit('new drawer', user);
+//     clearScreen();
+//     $('#guesses').empty();
+// }
 
-    if (click == true && data.guessword == $('span.word').text() ) {
-        socket.emit('correct answer', { nickname: data.nickname, guessword: data.guessword })
-        socket.emit('swap rooms', { from: user, to: data.nickname })
-        click = false
-    }
-}
+// let correctAnswer = function(data) {
+//     $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>');
+// };
 
-let newDrawer = function() {
-    socket.emit('new drawer', user);
-    clearScreen();
-    $('#guesses').empty();
-}
-
-let correctAnswer = function(data) {
-    $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>');
-};
-
-let reset = function(name) {
-    clearScreen();
-    $('#guesses').empty();
-    console.log('New drawer: ' + name);
-    showToast(`${name} is drawing now!`)
-    //$('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
-};
+// let reset = function(name) {
+//     clearScreen();
+//     $('#guesses').empty();
+//     console.log('New drawer: ' + name);
+//     showToast(`${name} is drawing now!`)
+//     //$('#guesses').html('<p>' + name + ' is the new drawer' + '</p>');
+// };
 
 
 
@@ -265,7 +284,7 @@ function joinAsDrawer() {
         color = '#000000',
         obj = {}
 
-    clearScreen()
+    //clearScreen()
     click = true
 
     //$('#guess').hide();
@@ -275,11 +294,11 @@ function joinAsDrawer() {
     $('#color-box').on('click', 'button', function() {
         obj.color = $(this).attr('value')
 
-        if (obj.color === '0') {
-            socket.emit('clear screen', user)
-            context.fillStyle = 'white'
-            return
-        }
+        // if (obj.color === '0') {
+        //     socket.emit('CLEAR_CANVAS', user)
+        //     context.fillStyle = 'white'
+        //     return
+        // }
     })
 
     $('.user-emoji').on('dblclick', function() {
