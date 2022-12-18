@@ -54,6 +54,11 @@ $(document).ready(function() {
     })
 
     // ****************************************************************
+    socket.on('QUIT_NOTIFICATION', function(msg) {
+        showToast(msg)
+    })
+
+    // ****************************************************************
     socket.on('PAINT', paint)
 
     // ****************************************************************
@@ -122,6 +127,14 @@ function clearCanvas() {
     // context.fillStyle = 'white'
     socket.emit('CLEAR_CANVAS', ME.name)
     return
+}
+
+// ****************************************************************
+function quit() {
+    socket.emit('QUIT', { playerName: ME.name })
+    players.length = 0
+   
+    document.querySelector('#modal_nick').classList.remove('hidden')
 }
 
 // ****************************************************************
@@ -239,6 +252,12 @@ function buildPlayerList(__players) {
             })
         }
     }
+}
+
+// ****************************************************************
+function clearPlayerTable() {
+    const table = document.querySelector('#players')
+    
 }
 
 // ****************************************************************

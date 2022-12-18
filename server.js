@@ -83,10 +83,24 @@ io.on('connection', function(socket) {
 		console.log('guessword event triggered on server from: ' + data.playerName + ' with word: ' + data.playerGuess)
 	})
 
-	socket.on('disconnect', function() {
-		for (var i = 0; i < players.length; i++) {
+	socket.on('QUIT', function(data) {
+		for (let i = 0; i < players.length; i++) {
+			// remove user from players list
+			if (players[i].name === data.playerName) {
+				players.splice(i, 1)
+				console.log(`${data.playerName} has quit.`)
+				console.log(players)
+			}
+		}
+
+		io.emit('QUIT_NOTIFICATION', data.playerName + ' has quit the game.')
+		io.emit('REFRESH_PLAYERS', players)
+	})
+
+	socket.on('disconnect', function(reason) {
+		for (let i = 0; i < players.length; i++) {
 			// remove user from users list
-			if (players[i] == socket.playerName) {
+			if (players[i].name === socket.playerName) {
 				players.splice(i, 1)
 			}
 		}
