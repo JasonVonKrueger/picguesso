@@ -16,6 +16,27 @@ function getNewWord() {
 	return words[wordcount]
 }
 
+function getDrawer() {
+	for (let index=0; index<players.length; index++) {
+		if (players[index].isDrawing ) {
+			return index
+		}
+	}
+
+	return false
+}
+
+function clearDrawer() {
+	for (let index=0; index<players.length; index++) {
+		players[index].isDrawing = false
+	}
+}
+
+function setDrawer(index) {
+	clearDrawer()
+	players[index].isDrawing = true
+}
+
 io.on('connection', function(socket) {
 	// send a list of players upon connection
 	io.emit('REFRESH_PLAYERS', players)
@@ -39,30 +60,41 @@ io.on('connection', function(socket) {
 		socket.join(playerName)
 		console.log(playerName + ' has joined. ID: ' + player.id)
 
-		let msg = playerName + ' has joined the game!'
-		socket.broadcast.emit('NEW_PLAYER_JOINED', msg)
+		socket.broadcast.emit('NEW_PLAYER_JOINED', playerName)
+
+		// if no one is drawing, make this player the drawer
+		if (getDrawer() === false) {
+			player.isDrawing = true
+			io.in(socket.playerName).emit('JOINED_AS_DRAWER', playerName)
+			let word = getNewWord()
+			io.in(socket.playerName).emit('SHOW_WORD', word)
+		}
+		else {
+			player.isDrawing = false
+			io.in(socket.playerName).emit('JOINED_AS_GUESSER', playerName)
+		}
 
 		// if the 'drawer' room has no connections
 		if (!io.sockets.adapter.rooms.has('drawer')) {
-			player.isDrawing = true
-			socket.join('drawer')
+			// player.isDrawing = true
+			// socket.join('drawer')
 
-			// server submits the 'JOINED_AS_DRAWER' event to this user
-			io.in(socket.playerName).emit('JOINED_AS_DRAWER', playerName)
-			console.log(playerName + ' is a drawer')
+			// // server submits the 'JOINED_AS_DRAWER' event to this user
+			// io.in(socket.playerName).emit('JOINED_AS_DRAWER', playerName)
+			// console.log(playerName + ' is a drawer')
 
-			// send the random word to the user inside the 'drawer' room
-			let word = getNewWord()
-			io.in(socket.playerName).emit('SHOW_WORD', word)
-			console.log(playerName + "'s draw word (join event): " + word)
+			// // send the random word to the user inside the 'drawer' room
+			// let word = getNewWord()
+			// io.in(socket.playerName).emit('SHOW_WORD', word)
+			// console.log(playerName + "'s draw word (join event): " + word)
 		} 
 		else {
-			player.isDrawing = false
-			socket.join('guesser')
+			// player.isDrawing = false
+			// socket.join('guesser')
 
-			// server submits the 'guesser' event to this user
-			io.in(socket.playerName).emit('JOINED_AS_GUESSER', playerName)
-			console.log(playerName + ' is a guesser')
+			// // server submits the 'guesser' event to this user
+			// io.in(socket.playerName).emit('JOINED_AS_GUESSER', playerName)
+			// console.log(playerName + ' is a guesser')
 		}
 	
 		players.push(player)
@@ -72,31 +104,33 @@ io.on('connection', function(socket) {
 		io.emit('REFRESH_PLAYERS', players)	
 	})
 
+	// ****************************************************************
 	// submit drawing on canvas to other clients
 	socket.on('PAINT', function(obj) {
 		socket.broadcast.emit('PAINT', obj)
 	})
 
+	// ****************************************************************
 	// submit each client's guesses to all clients
 	socket.on('GUESS_WORD', function(data) {
-		io.emit('GUESS_WORD', { playerName: data.playerName, playerGuess: data.playerGuess })
+		socket.broadcast.emit('GUESS_WORD', { playerName: data.playerName, playerGuess: data.playerGuess })
+		//io.emit('GUESS_WORD', { playerName: data.playerName, playerGuess: data.playerGuess })
 		console.log('guessword event triggered on server from: ' + data.playerName + ' with word: ' + data.playerGuess)
 	})
 
+	// ****************************************************************
 	socket.on('QUIT', function(data) {
 		for (let i = 0; i < players.length; i++) {
 			// remove user from players list
 			if (players[i].name === data.playerName) {
 				players.splice(i, 1)
-				console.log(`${data.playerName} has quit.`)
-				console.log(players)
 			}
 		}
 
-		io.emit('QUIT_NOTIFICATION', data.playerName + ' has quit the game.')
-		io.emit('REFRESH_PLAYERS', players)
+		io.emit('QUIT_NOTIFICATION', data.playerName)
 	})
 
+	// ****************************************************************
 	socket.on('disconnect', function(reason) {
 		for (let i = 0; i < players.length; i++) {
 			// remove user from users list
@@ -120,6 +154,7 @@ io.on('connection', function(socket) {
 		};
 	});
 
+	// ****************************************************************
 	socket.on('new drawer', function(name) {
 		// remove user from 'guesser' room
 		socket.leave('guesser')
@@ -135,6 +170,7 @@ io.on('connection', function(socket) {
 		io.in('drawer').emit('draw word', getNewWord())
 	})
 
+	// ****************************************************************
 	// initiated from drawer's 'dblclick' event in Player list
 	socket.on('swap rooms', function(data) {
 		// drawer leaves 'drawer' room and joins 'guesser' room
@@ -153,11 +189,13 @@ io.on('connection', function(socket) {
 		io.emit('reset', data.to)
 	})
 
+	// ****************************************************************
 	socket.on('correct answer', function(data) {
 		io.emit('correct answer', data)
 		console.log(data.playerName + ' guessed correctly with ' + data.playerGuess)
 	})
 
+	// ****************************************************************
 	socket.on('CLEAR_CANVAS', function(name) {
 		io.emit('CLEAR_CANVAS', name)
 	})

@@ -54,8 +54,11 @@ $(document).ready(function() {
     })
 
     // ****************************************************************
-    socket.on('QUIT_NOTIFICATION', function(msg) {
-        showToast(msg)
+    socket.on('QUIT_NOTIFICATION', function(player) {
+        // delete player from the player list
+        document.querySelector('#plyr-' + player).parentElement.remove();
+
+        showToast(`${player} has quit the game!`)
     })
 
     // ****************************************************************
@@ -89,8 +92,8 @@ $(document).ready(function() {
     })
 
     // ****************************************************************
-    socket.on('NEW_PLAYER_JOINED', function(msg) {
-        showToast(msg, 'joined')
+    socket.on('NEW_PLAYER_JOINED', function(playerName) {
+        showToast(playerName + ' has joined the game!', 'joined')
     })
 
     // ****************************************************************
@@ -228,14 +231,10 @@ function joinAsGuesser() {
 // ****************************************************************
 function buildPlayerList(__players) {
     players = __players
-    //const emojis = ['🥳', '🤠', '🥸', '😎', '🤓', '🧐', '💀', '💩', '🤡', '😼', '🙀', '🤖', '🦊', '🦄', '🐷']
     const table = document.querySelector('#players')
 
     for (let i=0; i<players.length; i++) {
         if (!document.getElementById('plyr-' + players[i].name)) {
-            // players.push(names[i])
-            //let random_emoji = emojis[Math.floor(Math.random() * emojis.length)]   
-
             let row = table.insertRow(i+1)         
 
             let cell1 = row.insertCell(0)
@@ -257,7 +256,7 @@ function buildPlayerList(__players) {
 // ****************************************************************
 function clearPlayerTable() {
     const table = document.querySelector('#players')
-    
+
 }
 
 // ****************************************************************
