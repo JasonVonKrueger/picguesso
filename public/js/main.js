@@ -337,14 +337,17 @@ function joinAsDrawer() {
     })
 
     canvas.on('mousedown', function(event) { 
+        event.preventDefault()
         drawing = true;   
     });
 
     canvas.on('mouseup', function(event) {
+        event.preventDefault()
         drawing = false;
     })
 
     canvas.on('mousemove', function(event) {
+        event.preventDefault()
         draw(event)
     })
 
