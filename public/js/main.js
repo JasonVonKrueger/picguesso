@@ -125,7 +125,10 @@ ______                _   _                 ___                  _   _
 function handle_touchstart(e) {
     e.preventDefault()
     drawing = true
-    alert(drawing)
+    
+    const {x, y} = canvas.getBoundingClientRect()
+    lastX = e.clientX - x
+    lastY = e.clientY - y
 }
 
 function handle_touchmove(e) {
@@ -146,7 +149,7 @@ function setPenColor(color) {
 
 // ****************************************************************
 function setLastCoords(e) {
-   e.preventDefault()
+   //e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     lastX = e.clientX - x
     lastY = e.clientY - y
