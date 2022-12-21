@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('modal_nick').classList.remove('hidden')
     //}
 
-	//canvas.addEventListener("click", draw)  // fires after mouse left btn is released
+	canvas.addEventListener("click", draw)  // fires after mouse left btn is released
     canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
     canvas.addEventListener("mousemove", freeForm)
 
@@ -218,7 +218,7 @@ function startGame() {
     //sndBackground.play()
 
     // request full screen
-    document.documentElement.requestFullscreen()
+    //document.documentElement.requestFullscreen()
 }
 
 // ****************************************************************
