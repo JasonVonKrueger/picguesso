@@ -17,7 +17,8 @@ const canvas = document.getElementById('canvas')
 const context = canvas.getContext('2d')
 let lastX = 0,
     lastY = 0,
-    penColor = '#000000'
+    penColor = '#000000',
+    drawing = false
 
 let canvasWidth = document.getElementById('canvas-box').offsetWidth
 let canvasHeight = document.getElementById('canvas-box').offsetHeight
@@ -35,13 +36,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     canvas.addEventListener("mousemove", freeForm)
 
 
-    // canvas.addEventListener('touchstart', process_touchstart, false);
-    // canvas.addEventListener('touchmove', process_touchmove, false);
+    canvas.addEventListener('touchstart', handle_touchstart, false);
+    canvas.addEventListener('touchmove', handle_touchmove, false);
     // canvas.addEventListener('touchcancel', process_touchcancel, false);
-    // canvas.addEventListener('touchend', process_touchend, false);
+    canvas.addEventListener('touchend', handle_touchend, false);
 
-    canvas.addEventListener("touchstart", setLastCoords)
-    canvas.addEventListener("touchmove", freeForm)
+    //canvas.addEventListener("touchstart", setLastCoords)
+    //canvas.addEventListener("touchmove", freeForm)
 
 
 
@@ -121,6 +122,21 @@ ______                _   _                 ___                  _   _
 //     context.clearRect(0, 0, canvas[0].width, canvas[0].height)
 // }
 
+function handle_touchstart(e) {
+    e.preventDefault()
+    drawing = true
+}
+
+function handle_touchmove(e) {
+    e.preventDefault()
+    draw(e)
+}
+
+function handle_touchend(e) {
+    e.preventDefault()
+    drawing = false
+}
+
 // ****************************************************************
 function setPenColor(color) {
     penColor = color
@@ -144,25 +160,26 @@ function freeForm(e) {
 
 // ****************************************************************
 function draw(e) {
-   e.preventDefault()
-    const {x, y} = canvas.getBoundingClientRect()
-    const newX = e.clientX - x
-    const newY = e.clientY - y
+    if (drawing) {
+        const {x, y} = canvas.getBoundingClientRect()
+        const newX = e.clientX - x
+        const newY = e.clientY - y
+        
+        context.beginPath()
+        context.lineWidth = 5
+        context.moveTo(lastX, lastY)
+        context.lineTo(newX, newY)
+        context.strokeStyle = penColor
+        context.stroke()
+        context.closePath()
+        
+        let pen = {color: penColor, lastX: lastX, lastY: lastY, newX: newX, newY: newY}
     
-    context.beginPath()
-    context.lineWidth = 5
-    context.moveTo(lastX, lastY)
-    context.lineTo(newX, newY)
-    context.strokeStyle = penColor
-    context.stroke()
-    context.closePath()
+        lastX = newX
+        lastY = newY
     
-    let pen = {color: penColor, lastX: lastX, lastY: lastY, newX: newX, newY: newY}
-
-    lastX = newX
-    lastY = newY
-
-    socket.emit('PAINT', pen)
+        socket.emit('PAINT', pen)
+    }
 }
 
 // ****************************************************************
