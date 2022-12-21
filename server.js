@@ -106,8 +106,8 @@ io.on('connection', function(socket) {
 
 	// ****************************************************************
 	// submit drawing on canvas to other clients
-	socket.on('PAINT', function(obj) {
-		socket.broadcast.emit('PAINT', obj)
+	socket.on('PAINT', function(pen) {
+		socket.broadcast.emit('PAINT', pen)
 	})
 
 	// ****************************************************************
@@ -190,8 +190,8 @@ io.on('connection', function(socket) {
 	})
 
 	// ****************************************************************
-	socket.on('correct answer', function(data) {
-		io.emit('correct answer', data)
+	socket.on('CORRECT_ANSWER', function(data) {
+		io.emit('CORRECT_ANSWER', data)
 		console.log(data.playerName + ' guessed correctly with ' + data.playerGuess)
 	})
 

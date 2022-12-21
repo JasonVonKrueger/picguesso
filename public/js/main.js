@@ -1,13 +1,8 @@
 const socket = io()
 let user = null
-let context = null
-let canvas = null
-let click = false
-
 let toastContain = null
 let musicIsPlaying = true
 
-//const socket = io({ autoConnect: false })
 
 let players = []
 const ME = {}
@@ -18,21 +13,34 @@ const sndBackground3 = new Howl({ src: ['../audio/Pixelland.mp3'], html5: true }
 
 let sndBackground = sndBackground3
 
-$(document).ready(function() {
+const canvas = document.getElementById('canvas')
+const context = canvas.getContext('2d')
+let lastX = 0,
+    lastY = 0,
+    penColor = '#000000'
+
+let canvasWidth = document.getElementById('canvas-box').offsetWidth
+let canvasHeight = document.getElementById('canvas-box').offsetHeight
+canvas.width = canvasWidth
+canvas.height = canvasHeight  
+
+document.addEventListener("DOMContentLoaded", function(event) {
     //ME.name = getCookie('Picguesso::playerName')
     //if (!ME.name) {
-      document.querySelector('#modal_nick').classList.remove('hidden')
+    document.getElementById('modal_nick').classList.remove('hidden')
     //}
 
-    let canvasWidth = document.querySelector('#canvas-box').offsetWidth
-    let canvasHeight = document.querySelector('#canvas-box').offsetHeight
+	//canvas.addEventListener("click", draw)  // fires after mouse left btn is released
+    canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
+    canvas.addEventListener("mousemove", freeForm)
 
-    canvas = $('#canvas') //document.getElementById('canvas')
-    context = canvas[0].getContext('2d')
-    canvas[0].width = canvasWidth
-    canvas[0].height = canvasHeight
 
+    socket.on('JOINED_AS_DRAWER', joinAsDrawer)
+    socket.on('JOINED_AS_GUESSER', joinAsGuesser)
     socket.on('REFRESH_PLAYERS', buildPlayerList)
+    socket.on('SHOW_WORD', showWord)
+    socket.on('PAINT', paint)
+    socket.on('CORRECT_ANSWER', correctAnswer)
 
     socket.on('GUESS_WORD', function(data) {
         showToast(data.playerName + "'s guess: " + data.playerGuess, 'guessed')
@@ -44,45 +52,32 @@ $(document).ready(function() {
         }     
     })
 
-    socket.on('JOINED_AS_DRAWER', joinAsDrawer)
-    socket.on('JOINED_AS_GUESSER', joinAsGuesser)
+    socket.on('NEW_PLAYER_JOINED', function(playerName) {
+        showToast(playerName + ' has joined the game!', 'joined')
+    })
+ 
+    
 
-    // ****************************************************************
+    
+
     socket.on('CLEAR_CANVAS', function(name) {
-        context.clearRect(0, 0, canvas[0].width, canvas[0].height)
+        context.clearRect(0, 0, canvas.width, canvas.height)
         context.fillStyle = 'white'
     })
 
-    // ****************************************************************
     socket.on('QUIT_NOTIFICATION', function(player) {
         // delete player from the player list
-        document.querySelector('#plyr-' + player).parentElement.remove();
+        document.querySelector('#plyr-' + player).parentElement.remove()
 
         showToast(`${player} has quit the game!`)
     })
 
-    // ****************************************************************
-    socket.on('PAINT', paint)
-
-    // ****************************************************************
-    socket.on('SHOW_WORD', function(word) {
-        document.querySelector('.draw').classList.remove('hidden')
-        document.querySelector('#secret-word').innerHTML = word 
-    })
-
-    // ****************************************************************
     socket.on('new drawer', function() {
         socket.emit('new drawer', user)
         clearScreen()
         $('#guesses').empty()
     })
 
-    // ****************************************************************
-    socket.on('correct answer', function(data) {
-        $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>')      
-    })
-
-    // ****************************************************************
     socket.on('reset', function(name) {
         clearScreen()
         $('#guesses').empty()
@@ -92,17 +87,14 @@ $(document).ready(function() {
     })
 
     // ****************************************************************
-    socket.on('NEW_PLAYER_JOINED', function(playerName) {
-        showToast(playerName + ' has joined the game!', 'joined')
-    })
-
-    // ****************************************************************
     // hide the name error box when name input is in focus
     document.querySelector('#player_name').addEventListener('focus', function() {
         document.querySelector('#error_name').style.display = 'none'  
         document.querySelector('#player_name').value = ''
     })
+
 })
+
 
 /* ************************************************************************************
 ______                _   _                 ___                  _   _             
@@ -120,16 +112,62 @@ ______                _   _                 ___                  _   _
 // }
 
 // ****************************************************************
-function clearCanvas() {
-    alert('yo ' + ME.isDrawing)
-    if (!ME.isDrawing) {
-        return false
-    }
-
-    // context.clearRect(0, 0, canvas[0].width, canvas[0].height)
-    // context.fillStyle = 'white'
-    socket.emit('CLEAR_CANVAS', ME.name)
+function setPenColor(color) {
+    penColor = color
     return
+}
+
+// ****************************************************************
+function setLastCoords(e) {
+    const {x, y} = canvas.getBoundingClientRect()
+    lastX = e.clientX - x
+    lastY = e.clientY - y
+}
+
+// ****************************************************************
+function freeForm(e) {
+    if (e.buttons !== 1) return   // left button is not pushed yet
+    draw(e)
+}
+
+// ****************************************************************
+function draw(e) {
+    const {x, y} = canvas.getBoundingClientRect()
+    const newX = e.clientX - x
+    const newY = e.clientY - y
+    
+    context.beginPath()
+    context.lineWidth = 5
+    context.moveTo(lastX, lastY)
+    context.lineTo(newX, newY)
+    context.strokeStyle = penColor
+    context.stroke()
+    context.closePath()
+    
+    let pen = {color: penColor, lastX: lastX, lastY: lastY, newX: newX, newY: newY}
+
+    lastX = newX
+    lastY = newY
+
+    socket.emit('PAINT', pen)
+}
+
+// ****************************************************************
+function paint(pen) {
+    context.beginPath()
+    context.lineWidth = 5
+    context.moveTo(pen.lastX, pen.lastY)
+    context.lineTo(pen.newX, pen.newY)
+    context.strokeStyle = pen.color
+    context.stroke()
+    context.closePath()   
+}
+
+// ****************************************************************
+function clearCanvas() {
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    context.fillStyle = 'white'
+    socket.emit('CLEAR_CANVAS', ME.name)
 }
 
 // ****************************************************************
@@ -138,13 +176,14 @@ function quit() {
     players.length = 0
    
     document.querySelector('#modal_nick').classList.remove('hidden')
+    document.exitFullscreen()
 }
 
 // ****************************************************************
-// function showWord(word) {
-//     document.querySelector('.draw').classList.remove('hidden')
-//     document.querySelector('#secret-word').innerHTML = word 
-// }
+function showWord(word) {
+    document.querySelector('.draw').classList.remove('hidden')
+    document.querySelector('#secret-word').innerHTML = word 
+}
 
 // ****************************************************************
 function sendGuess(event) {
@@ -164,7 +203,7 @@ function startGame() {
     if (!ME.name) return false
 
     if (document.getElementById('plyr-' + ME.name)) {
-        document.querySelector('#error_name').style.display = 'block'
+        document.getElementById('error_name').style.display = 'block'
         return false
     }
 
@@ -172,60 +211,37 @@ function startGame() {
     //setCookie('Picguesso::playerName', ME.name, 30)
 
     socket.emit('join', ME.name)
-    document.querySelector('#modal_nick').classList.add('hidden')
+    document.getElementById('modal_nick').classList.add('hidden')
     //sndBackground.play()
+
+    // request full screen
+    //document.documentElement.requestFullscreen()
 }
 
 // ****************************************************************
 function toggleMusic() {
     if (musicIsPlaying) {
         sndBackground.stop()
-        document.querySelector('#speaker-button').src = '../images/music-off.svg'
+        document.getElementById('speaker-button').src = '../images/music-off.svg'
         musicIsPlaying = false
     }
     else {
         sndBackground.play()
-        document.querySelector('#speaker-button').src = '../images/music-on.svg'
+        document.getElementById('speaker-button').src = '../images/music-on.svg'
         musicIsPlaying = true
     }
 }
 
 // ****************************************************************
-function paint(obj) {
-    context.fillStyle = obj.color
-    context.beginPath()
-    context.arc(obj.position.x, obj.position.y, 3, 0, 2 * Math.PI)
-    context.fill()
-}
-
-// ****************************************************************
 function joinAsGuesser() {
-    document.querySelector('#canvas').classList.add('no-pointer-events')
-    document.querySelector('#guess-word-box').classList.remove('hidden')
-    document.querySelector('#secret-word-box').classList.add('hidden')
+    document.getElementById('canvas').classList.add('no-pointer-events')
+    document.getElementById('guess-word-box').classList.remove('hidden')
+    document.getElementById('secret-word-box').classList.add('hidden')
 
     ME.isDrawing = false
 
-    //clearScreen()
-    click = false
     $('#guesses').empty()
-
-
-    //$('#guess').show();
     $('#player_guess_text').focus()
-
-    $('#guess').on('submit', function() {
-        // event.preventDefault();
-        // var guess = $('#player_guess_text').val();
-
-        // if (guess == '') {
-        //     return false
-        // };
-
-        // console.log(nickname + "'s guess: " + guess);
-        // socket.emit('guessword', { nickname: nickname, guessword: guess })
-        // $('#player_guess_text').val('');
-    })
 }
 
 // ****************************************************************
@@ -254,10 +270,10 @@ function buildPlayerList(__players) {
 }
 
 // ****************************************************************
-function clearPlayerTable() {
-    const table = document.querySelector('#players')
+// function clearPlayerTable() {
+//     const table = document.querySelector('#players')
 
-}
+// }
 
 // ****************************************************************
 function shareGame() {
@@ -278,9 +294,9 @@ function shareGame() {
 //     $('#guesses').empty();
 // }
 
-// let correctAnswer = function(data) {
-//     $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>');
-// };
+let correctAnswer = function(data) {
+    $('#guesses').html('<p>' + data.nickname + ' guessed correctly!' + '</p>');
+};
 
 // let reset = function(name) {
 //     clearScreen();
@@ -294,76 +310,60 @@ function shareGame() {
 
 // ****************************************************************
 function joinAsDrawer() {
+    ME.isDrawing = true
     document.querySelector('#canvas').classList.remove('no-pointer-events')
     document.querySelector('#guess-word-box').classList.add('hidden')
     document.querySelector('#secret-word-box').classList.remove('hidden')
 
-    let drawing = null,
-        color = '#000000',
-        obj = {}
-
-    //clearScreen()
-    click = true
-
     //$('#guess').hide();
     $('#guesses').empty()
-    // $('.draw').show()
 
-    $('#color-box').on('click', 'button', function() {
-        obj.color = $(this).attr('value')
 
-        // if (obj.color === '0') {
-        //     socket.emit('CLEAR_CANVAS', user)
-        //     context.fillStyle = 'white'
-        //     return
-        // }
-    })
+    // $('.user-emoji').on('dblclick', function() {
+    //     if (click == true) {
+    //         var target = $(this).text();
+    //         socket.emit('swap rooms', { from: user, to: target })
+    //     };
+    // })
 
-    $('.user-emoji').on('dblclick', function() {
-        if (click == true) {
-            var target = $(this).text();
-            socket.emit('swap rooms', { from: user, to: target })
-        };
-    })
+    // canvas.on('touchstart', function(event) { 
+    //     event.preventDefault()
+    //     drawing = true 
+    // })
 
-    canvas.on('touchstart', function(event) { 
-        event.preventDefault()
-        drawing = true 
-    })
+    // canvas.on('touchmove', function(event) {
+    //     event.preventDefault()
+    //     draw(event)
+    // })
 
-    canvas.on('touchmove', function(event) {
-        event.preventDefault()
-        draw(event)
-    })
+    // canvas.on('mousedown', function(event) { 
+    //     event.preventDefault()
+    //     drawing = true;   
+    // });
 
-    canvas.on('mousedown', function(event) { 
-        event.preventDefault()
-        drawing = true;   
-    });
+    // canvas.on('mouseup', function(event) {
+    //     event.preventDefault()
+    //     drawing = false;
+    // })
 
-    canvas.on('mouseup', function(event) {
-        event.preventDefault()
-        drawing = false;
-    })
+    // canvas.on('mousemove', function(event) {
+    //     event.preventDefault()
+    //     draw(event)
+    // })
 
-    canvas.on('mousemove', function(event) {
-        event.preventDefault()
-        draw(event)
-    })
-
-    function draw(event) {
-        let offset = canvas.offset();
-        obj.position = { x: event.pageX - offset.left, y: event.pageY - offset.top }
+    // function draw(event) {
+    //     let offset = canvas.offset();
+    //     obj.position = { x: event.pageX - offset.left, y: event.pageY - offset.top }
         
-        if (drawing && click) {
-            context.fillStyle = obj.color
-            context.beginPath()
-            context.arc(obj.position.x, obj.position.y, 3, 0, 2 * Math.PI);
-            context.fill()
+    //     if (drawing && click) {
+    //         context.fillStyle = obj.color
+    //         context.beginPath()
+    //         context.arc(obj.position.x, obj.position.y, 3, 0, 2 * Math.PI);
+    //         context.fill()
 
-            socket.emit('PAINT', obj)
-        }
-    }
+    //         socket.emit('PAINT', obj)
+    //     }
+    // }
 
 }
 
