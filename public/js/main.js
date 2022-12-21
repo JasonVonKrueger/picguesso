@@ -34,6 +34,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
     canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
     canvas.addEventListener("mousemove", freeForm)
 
+    canvas.addEventListener("touchstart", setLastCoords)
+    canvas.addEventListener("touchmove", freeForm)
+
 
     socket.on('JOINED_AS_DRAWER', joinAsDrawer)
     socket.on('JOINED_AS_GUESSER', joinAsGuesser)
