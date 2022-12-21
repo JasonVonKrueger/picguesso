@@ -30,11 +30,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById('modal_nick').classList.remove('hidden')
     //}
 
-	canvas.addEventListener("click", draw)  // fires after mouse left btn is released
+	//canvas.addEventListener("click", draw)  // fires after mouse left btn is released
     canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
     canvas.addEventListener("mousemove", freeForm)
 
     canvas.addEventListener("touchstart", setLastCoords)
+    canvas.addEventListener("touchmove", freeForm)
+
+    canvas.addEventListener("touchmove", freeForm)
     canvas.addEventListener("touchmove", freeForm)
 
 
@@ -122,7 +125,7 @@ function setPenColor(color) {
 
 // ****************************************************************
 function setLastCoords(e) {
-    e.preventDefault()
+   // e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     lastX = e.clientX - x
     lastY = e.clientY - y
@@ -130,14 +133,14 @@ function setLastCoords(e) {
 
 // ****************************************************************
 function freeForm(e) {
-    e.preventDefault()
+    //e.preventDefault()
     if (e.buttons !== 1) return   // left button is not pushed yet
     draw(e)
 }
 
 // ****************************************************************
 function draw(e) {
-    e.preventDefault()
+   // e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     const newX = e.clientX - x
     const newY = e.clientY - y
