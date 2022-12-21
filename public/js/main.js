@@ -125,6 +125,7 @@ ______                _   _                 ___                  _   _
 function handle_touchstart(e) {
     e.preventDefault()
     drawing = true
+    alert(drawing)
 }
 
 function handle_touchmove(e) {
