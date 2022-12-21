@@ -32,19 +32,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //}
 
 	//canvas.addEventListener("click", draw)  // fires after mouse left btn is released
-   // canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
-    //canvas.addEventListener("mousemove", freeForm)
-
-
+    canvas.addEventListener("mousedown", handle_touchstart)  // fires before mouse left btn is released
+    canvas.addEventListener("mousemove", handle_touchmove)
+    canvas.addEventListener("mouseup", handle_touchend)
     canvas.addEventListener('touchstart', handle_touchstart)
     canvas.addEventListener('touchmove', handle_touchmove)
-    // canvas.addEventListener('touchcancel', process_touchcancel, false);
     canvas.addEventListener('touchend', handle_touchend)
-
-    //canvas.addEventListener("touchstart", setLastCoords)
-    //canvas.addEventListener("touchmove", freeForm)
-
-
 
     socket.on('JOINED_AS_DRAWER', joinAsDrawer)
     socket.on('JOINED_AS_GUESSER', joinAsGuesser)
@@ -133,37 +126,8 @@ function handle_touchstart(e) {
 
 function handle_touchmove(e) {
     e.preventDefault()
-    draw(e)
-}
+    //draw(e)
 
-function handle_touchend(e) {
-    e.preventDefault()
-    drawing = false
-}
-
-// ****************************************************************
-function setPenColor(color) {
-    penColor = color
-    return
-}
-
-// ****************************************************************
-function setLastCoords(e) {
-   //e.preventDefault()
-    const {x, y} = canvas.getBoundingClientRect()
-    lastX = e.clientX - x
-    lastY = e.clientY - y
-}
-
-// ****************************************************************
-function freeForm(e) {
-    e.preventDefault()
-    //if (e.buttons !== 1) return   // left button is not pushed yet
-    draw(e)
-}
-
-// ****************************************************************
-function draw(e) {
     if (drawing) {
         const {x, y} = canvas.getBoundingClientRect()
         const newX = e.clientX - x
@@ -185,6 +149,63 @@ function draw(e) {
         socket.emit('PAINT', pen)
     }
 }
+
+function handle_touchend(e) {
+    e.preventDefault()
+    drawing = false
+}
+
+function handle_mouseup(e) {
+    e.preventDefault()
+    drawing = false
+}
+
+// ****************************************************************
+function setPenColor(color) {
+    penColor = color
+    return
+}
+
+// ****************************************************************
+// function setLastCoords(e) {
+//    //e.preventDefault()
+//    drawing = true
+//     const {x, y} = canvas.getBoundingClientRect()
+//     lastX = e.clientX - x
+//     lastY = e.clientY - y
+// }
+
+// ****************************************************************
+// function freeForm(e) {
+//     e.preventDefault()
+//     drawing = true
+//     //if (e.buttons !== 1) return   // left button is not pushed yet
+//     draw(e)
+// }
+
+// ****************************************************************
+// function draw(e) {
+//     if (drawing) {
+//         const {x, y} = canvas.getBoundingClientRect()
+//         const newX = e.clientX - x
+//         const newY = e.clientY - y
+        
+//         context.beginPath()
+//         context.lineWidth = 5
+//         context.moveTo(lastX, lastY)
+//         context.lineTo(newX, newY)
+//         context.strokeStyle = penColor
+//         context.stroke()
+//         context.closePath()
+        
+//         let pen = {color: penColor, lastX: lastX, lastY: lastY, newX: newX, newY: newY}
+    
+//         lastX = newX
+//         lastY = newY
+    
+//         socket.emit('PAINT', pen)
+//     }
+// }
 
 // ****************************************************************
 function paint(pen) {
