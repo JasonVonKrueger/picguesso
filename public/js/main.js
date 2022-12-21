@@ -34,11 +34,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
     canvas.addEventListener("mousemove", freeForm)
 
+
+    // canvas.addEventListener('touchstart', process_touchstart, false);
+    // canvas.addEventListener('touchmove', process_touchmove, false);
+    // canvas.addEventListener('touchcancel', process_touchcancel, false);
+    // canvas.addEventListener('touchend', process_touchend, false);
+
     canvas.addEventListener("touchstart", setLastCoords)
     canvas.addEventListener("touchmove", freeForm)
 
-    canvas.addEventListener("touchmove", freeForm)
-    canvas.addEventListener("touchmove", freeForm)
 
 
     socket.on('JOINED_AS_DRAWER', joinAsDrawer)
@@ -125,7 +129,7 @@ function setPenColor(color) {
 
 // ****************************************************************
 function setLastCoords(e) {
-   // e.preventDefault()
+   e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     lastX = e.clientX - x
     lastY = e.clientY - y
@@ -133,14 +137,14 @@ function setLastCoords(e) {
 
 // ****************************************************************
 function freeForm(e) {
-    //e.preventDefault()
-    if (e.buttons !== 1) return   // left button is not pushed yet
+    e.preventDefault()
+    //if (e.buttons !== 1) return   // left button is not pushed yet
     draw(e)
 }
 
 // ****************************************************************
 function draw(e) {
-   // e.preventDefault()
+   e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     const newX = e.clientX - x
     const newY = e.clientY - y
