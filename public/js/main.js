@@ -32,14 +32,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //}
 
 	//canvas.addEventListener("click", draw)  // fires after mouse left btn is released
-    canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
-    canvas.addEventListener("mousemove", freeForm)
+   // canvas.addEventListener("mousedown", setLastCoords)  // fires before mouse left btn is released
+    //canvas.addEventListener("mousemove", freeForm)
 
 
-    canvas.addEventListener('touchstart', handle_touchstart, false);
-    canvas.addEventListener('touchmove', handle_touchmove, false);
+    canvas.addEventListener('touchstart', handle_touchstart)
+    canvas.addEventListener('touchmove', handle_touchmove)
     // canvas.addEventListener('touchcancel', process_touchcancel, false);
-    canvas.addEventListener('touchend', handle_touchend, false);
+    canvas.addEventListener('touchend', handle_touchend)
 
     //canvas.addEventListener("touchstart", setLastCoords)
     //canvas.addEventListener("touchmove", freeForm)
@@ -125,7 +125,7 @@ ______                _   _                 ___                  _   _
 function handle_touchstart(e) {
     e.preventDefault()
     drawing = true
-    
+
     const {x, y} = canvas.getBoundingClientRect()
     lastX = e.clientX - x
     lastY = e.clientY - y
