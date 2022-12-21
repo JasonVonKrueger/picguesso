@@ -119,6 +119,7 @@ function setPenColor(color) {
 
 // ****************************************************************
 function setLastCoords(e) {
+    e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     lastX = e.clientX - x
     lastY = e.clientY - y
@@ -126,12 +127,14 @@ function setLastCoords(e) {
 
 // ****************************************************************
 function freeForm(e) {
+    e.preventDefault()
     if (e.buttons !== 1) return   // left button is not pushed yet
     draw(e)
 }
 
 // ****************************************************************
 function draw(e) {
+    e.preventDefault()
     const {x, y} = canvas.getBoundingClientRect()
     const newX = e.clientX - x
     const newY = e.clientY - y
@@ -215,7 +218,7 @@ function startGame() {
     //sndBackground.play()
 
     // request full screen
-    //document.documentElement.requestFullscreen()
+    document.documentElement.requestFullscreen()
 }
 
 // ****************************************************************
