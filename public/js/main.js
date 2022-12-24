@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     canvas.addEventListener("mouseup", handle_mouseup)
     canvas.addEventListener('touchstart', handle_touchstart, false)
     canvas.addEventListener('touchmove', handle_touchmove, false)
-    canvas.addEventListener('touchend', handle_touchend, falsse)
+    canvas.addEventListener('touchend', handle_touchend, false)
 
     socket.on('JOINED_AS_DRAWER', joinAsDrawer)
     socket.on('JOINED_AS_GUESSER', joinAsGuesser)
